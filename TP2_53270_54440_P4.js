@@ -17,7 +17,7 @@ window.onload = function init() {
     if(!gl) { alert("WebGL isn't available"); }
     
     // Configure WebGL
-    resizeCanvas()
+    resizeCanvas();
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
     addEventListeners();
@@ -85,7 +85,7 @@ function addEventListeners()
 function resizeCanvas()
 {
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight - 200;
+    canvas.height = window.innerHeight - window.innerHeight*0.3;
     gl.viewport(0,0, canvas.width, canvas.height);
 }
 
