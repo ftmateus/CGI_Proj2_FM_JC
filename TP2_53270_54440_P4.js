@@ -1,5 +1,6 @@
 var gl; var program,  canvas;
-var instances = []; var nInstances = 0;
+//var instances = []; var nInstances = 0;
+var currentInstance;
 var tx; var ty; var tz;
 var rx; var ry; var rz;
 var sx; var sy; var sz;
@@ -46,13 +47,14 @@ window.onload = function init() {
     render();
 }
 
-window.onwheel = function()
+canvas.onwheel = function()
 {
 
 }
 
 function addEventListeners()
 {
+    /*
     document.getElementById("tx").addEventListener("input", function()
     {tx = this.value; updateMatrixModel();});
     document.getElementById("ty").addEventListener("input", function()
@@ -70,14 +72,14 @@ function addEventListeners()
     document.getElementById("sy").addEventListener("input", function()
     {sy = this.value; updateMatrixModel();});
     document.getElementById("sz").addEventListener("input", function()
-    {sz = this.value; updateMatrixModel();});
-    document.getElementById("newCube").addEventListener("click", function () {create('cube');});
-    document.getElementById("newSphere").addEventListener("click", function () {create('sphere')});
-    document.getElementById("newCylinder").addEventListener("click", function () {create('cylinder')});
-    document.getElementById("newTorus").addEventListener("click", function () {create('torus')});
-    document.getElementById("newBunny").addEventListener("click", function () {create('bunny')});
-    document.getElementById("resetCurrent").addEventListener("click", resetCurrent);
-    document.getElementById("resetAll").addEventListener("click", resetAll);
+    {sz = this.value; updateMatrixModel();});*/
+    document.getElementById("cube").addEventListener("click", function () {create('cube');});
+    document.getElementById("sphere").addEventListener("click", function () {create('sphere')});
+    document.getElementById("cylinder").addEventListener("click", function () {create('cylinder')});
+    document.getElementById("torus").addEventListener("click", function () {create('torus')});
+    document.getElementById("bunny").addEventListener("click", function () {create('bunny')});
+    //document.getElementById("resetCurrent").addEventListener("click", resetCurrent);
+    //document.getElementById("resetAll").addEventListener("click", resetAll);
     addEventListener("keypress", keyPress);
     window.addEventListener('resize', resizeCanvas, false);
 }
@@ -107,13 +109,14 @@ function create(type) {
 
     switch(type)
     {
-        case 'cube': instances.push({m: mat4(), f: cubeDraw}); break;
-        case 'sphere':  instances.push({m: mat4(), f: sphereDraw}); break;
-        case 'cylinder': instances.push({m: mat4(), f: cylinderDraw}); break;
-        case 'torus': instances.push({m: mat4(), f: torusDraw}); break;
-        case 'bunny': instances.push({m: mat4(), f: bunnyDraw}); break;
+        case 'cube': currentInstance = {m: mat4(), f: cubeDraw}; break;
+        case 'sphere':  currentInstance = {m: mat4(), f: sphereDraw}; break;
+        case 'cylinder': currentInstance = {m: mat4(), f: cylinderDraw}; break;
+        case 'torus': currentInstance = {m: mat4(), f: torusDraw}; break;
+        case 'bunny': currentInstance = {m: mat4(), f: bunnyDraw}; break;
     }
-    nInstances++;
+    document.getElementById(type).checked = true;
+    //nInstances++;
 }
 
 function resetCurrent() {
@@ -125,24 +128,26 @@ function resetCurrent() {
 }
 
 function resetAll() {
-    instances = [];
-    nInstances = 0;
+    //instances = [];
+    //nInstances = 0;
     create('cube');
     resetCurrent();
 }
 
 function updateMatrixModel() {
-    instances[nInstances - 1].m = mult(translate(tx, ty, tz), mult(rotateX(rx), mult(rotateY(ry), mult(rotateZ(rz), scalem(sx, sy, sz)))));
+    /*instances[nInstances - 1].m*/currentInstance = mult(translate(tx, ty, tz), mult(rotateX(rx), mult(rotateY(ry), mult(rotateZ(rz), scalem(sx, sy, sz)))));
 }
 
 function render() {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.uniformMatrix4fv(mViewLocation, false, flatten(mView));
     gl.uniformMatrix4fv(mProjectionLocation, false, flatten(mProjection));
-
+    /*
     for (var i = 0; i < nInstances; i++) {
         gl.uniformMatrix4fv(mModelLocation, false, flatten(instances[i].m));
         instances[i].f(gl, program, isFilled);
-    }
+    }*/
+    gl.uniformMatrix4fv(mModelLocation, false, flatten(currentInstance.m));
+    currentInstance.f(gl, program, isFilled);
     requestAnimFrame(render);
 }

@@ -1,6 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>TP2_53270_54440_P4</title>
+<style>
+    * { margin:0; padding:0;} /* to remove the top and left whitespace */
+    
+    html, body { width:100%; height:100%; } /* just to be sure these are full screen*/
+    
+    .buttonsContainerStyle button {
+        background-color: rgb(18, 30, 194);
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        }
+    /*
+    canvas {
+        width:100%;
+        height:75%;
+        background: rgb(84, 84, 100);  /* to show the canvas bounds */
+        /*display:block; */    /* to remove the scrollbars    
+}*/
+</style>
 <script id="vertex-shader" type="x-shader/x-vertex">
 attribute vec4 vPosition;
 attribute vec4 vNormal;
@@ -31,12 +57,21 @@ void main() {
 <script type="text/javascript" src="../Common/bunny-data.js"></script>
 <script type="text/javascript" src="TP2_53270_54440_P4.js"></script>
 </head>
+
+
 <body>
-    <title>TP2_53270_54440_P4</title>
     <canvas id="gl-canvas">
         Oops... your browser doesn't support the HTML5 canvas element"
     </canvas>
-    <form>
+    <div id="buttonsContainer" class = "buttonsContainerStyle">
+        <button id="orthogonal" type="button" class = "orthogonalStyle">Ortogonal</button>
+        <button id="axonometric" type="button" class = "axonometricStyle">Axonometric</button>
+        <button id="oblique" type="button" class = "obliqueStyle">Oblique</button>
+        <button id="perspective" type="button" class = "perspectiveStyle">Perspective</button>
+        <button id="generic" type="button" class = "genericStyle">Generic</button>
+        <button id="object" type="button" class = "objectStyle">Object</button>
+    </div>
+    <form><!--
         tx: <input type="range" id="tx" value="0" min="-1" max="1" step="0.1">
         ty: <input type="range" id="ty" value="0" min="-1" max="1" step="0.1">
         tz: <input type="range" id="tz" value="0" min="-1" max="1" step="0.1"><br>
@@ -45,32 +80,15 @@ void main() {
         rz: <input type="range" id="rz" value="0" min="-180" max="180" step="5"><br>
         sx: <input type="range" id="sx" value="1.025" min="0.05" max="2" step="0.01">
         sy: <input type="range" id="sy" value="1.025" min="0.05" max="2" step="0.01">
-        sz: <input type="range" id="sz" value="1.025" min="0.05" max="2" step="0.01"><br>
-        <input type="reset" id="newCube" value="Create Cube">
-        <input type="reset" id="newSphere" value="Create Sphere">
-        <input type="reset" id="newCylinder" value="Create Cylinder">
-        <input type="reset" id="newTorus" value="Create Torus">
-        <input type="reset" id="newBunny" value="Create Bunny"><br>
-        <input type="reset" id="resetCurrent" value="Reset Current">
-        <input type="reset" id="resetAll" value="Reset All"><br>
-        <input type="reset" id="orthogonal" value="Ortogonal">
-        <input type="reset" id="axonometric" value="Axonomatric">
-        <input type="reset" id="oblique" value="Oblique">
-        <input type="reset" id="perspective" value="Perspective">
-        <input type="reset" id="generic" value="Generic">
-        <input type="reset" id="object" value="Object">
+        sz: <input type="range" id="sz" value="1.025" min="0.05" max="2" step="0.01"><br>-->
+        <input type="radio" name = "shape" id="cube" value="Create Cube"> Create Cube<br>
+        <input type="radio" name = "shape" id="sphere" value="Create Sphere"> Create Sphere<br>
+        <input type="radio" name = "shape" id="cylinder" value="Create Cylinder"> Create Cylinder<br>
+        <input type="radio" name = "shape" id="torus" value="Create Torus"> Create Torus<br>
+        <input type="radio" name = "shape" id="bunny" value="Create Bunny"> Create Bunny<br>
+        <!--<input type="reset" id="resetCurrent" value="Reset Current">
+        <input type="reset" id="resetAll" value="Reset All"><br>-->
     </form>
 </body>
-<style>
-    * { margin:0; padding:0;} /* to remove the top and left whitespace */
-    
-    html, body { width:100%; height:100%; } /* just to be sure these are full screen*/
-    /*
-    canvas {
-        width:100%;
-        height:75%;
-        background: rgb(84, 84, 100);  /* to show the canvas bounds */
-        /*display:block; */    /* to remove the scrollbars    
-}*/
-</style>
+
 </html>
