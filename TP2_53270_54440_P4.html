@@ -33,9 +33,11 @@ void main() {
 </head>
 <body>
     <title>TP2_53270_54440_P4</title>
-    <canvas id="gl-canvas" width="1024" height="512">
-        Oops... your browser doesn't support the HTML5 canvas element"
-    </canvas>
+    <div id='d3' style="position:relative; top:0px; left:0px; z-index:3">
+        <canvas id="gl-canvas" width="1024" height="512">
+            Oops... your browser doesn't support the HTML5 canvas element"
+        </canvas>
+    </div>
     <form>
         tx: <input type="range" id="tx" value="0" min="-1" max="1" step="0.1">
         ty: <input type="range" id="ty" value="0" min="-1" max="1" step="0.1">
@@ -52,7 +54,25 @@ void main() {
         <input type="reset" id="newTorus" value="Create Torus">
         <input type="reset" id="newBunny" value="Create Bunny"><br>
         <input type="reset" id="resetCurrent" value="Reset Current">
-        <input type="reset" id="resetAll" value="Reset All">
+        <input type="reset" id="resetAll" value="Reset All"><br>
+        <input type="reset" id="orthogonal" value="Ortogonal">
+        <input type="reset" id="axonometric" value="Axonomatric">
+        <input type="reset" id="oblique" value="Oblique">
+        <input type="reset" id="perspective" value="Perspective">
+        <input type="reset" id="generic" value="Generic">
+        <input type="reset" id="object" value="Object">
     </form>
 </body>
+<style>
+    * { margin:0; padding:0; overflow: hidden;} /* to remove the top and left whitespace */
+    
+    html, body { width:100%; height:100%; } /* just to be sure these are full screen*/
+    /*
+    canvas {
+        width:100%;
+        height:75%;
+        background: rgb(84, 84, 100);  /* to show the canvas bounds */
+        /*display:block; */    /* to remove the scrollbars */
+}
+</style>
 </html>

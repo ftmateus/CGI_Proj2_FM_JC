@@ -1,18 +1,23 @@
-var gl; var program;
+var gl; var program,  canvas;
 var instances = []; var nInstances = 0;
 var tx; var ty; var tz;
 var rx; var ry; var rz;
 var sx; var sy; var sz;
 var mView; var mProjection; var mModel; var mModelLocation;
 var isFilled = false;
+var colors = [
+    vec3(1,0,0),
+    vec3(0,1,0),
+    vec3(0,0,1)
+];
 
 window.onload = function init() {
-    var canvas = document.getElementById("gl-canvas");
+    canvas = document.getElementById("gl-canvas");
     gl = WebGLUtils.setupWebGL(canvas);
     if(!gl) { alert("WebGL isn't available"); }
     
     // Configure WebGL
-    gl.viewport(0,0,canvas.width, canvas.height);
+    resizeCanvas()
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
     addEventListeners();
@@ -39,6 +44,11 @@ window.onload = function init() {
     mProjectionLocation = gl.getUniformLocation(program, "mProjection");
 
     render();
+}
+
+window.onwheel = function()
+{
+
 }
 
 function addEventListeners()
@@ -69,6 +79,14 @@ function addEventListeners()
     document.getElementById("resetCurrent").addEventListener("click", resetCurrent);
     document.getElementById("resetAll").addEventListener("click", resetAll);
     addEventListener("keypress", keyPress);
+    window.addEventListener('resize', resizeCanvas, false);
+}
+
+function resizeCanvas()
+{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight - 200;
+    gl.viewport(0,0, canvas.width, canvas.height);
 }
 
 function keyPress(ev)
@@ -119,7 +137,6 @@ function updateMatrixModel() {
 
 function render() {
     gl.clear(gl.COLOR_BUFFER_BIT);
-
     gl.uniformMatrix4fv(mViewLocation, false, flatten(mView));
     gl.uniformMatrix4fv(mProjectionLocation, false, flatten(mProjection));
 
