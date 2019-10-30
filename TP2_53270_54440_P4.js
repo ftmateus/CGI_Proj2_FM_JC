@@ -1,9 +1,9 @@
-var gl; var program,  canvas;
+var gl; var program, canvas;
 //var instances = []; var nInstances = 0;
 var currentInstance;
-var tx; var ty; var tz;
-var rx; var ry; var rz;
-var sx; var sy; var sz;
+var tx = 0; var ty = 0; var tz = 0;
+var rx = 0; var ry = 0; var rz = 0;
+var sx = 1; var sy = 1; var sz = 1;
 var mView; var mProjection; var mModel; var mModelLocation;
 var isFilled = false;
 var colors = [
@@ -11,6 +11,7 @@ var colors = [
     vec3(0,1,0),
     vec3(0,0,1)
 ];
+//const CTM = mult(mat4(), scalem(1,canvas.width/canvas.height, 1));
 
 window.onload = function init() {
     canvas = document.getElementById("gl-canvas");
@@ -18,7 +19,9 @@ window.onload = function init() {
     if(!gl) { alert("WebGL isn't available"); }
     
     // Configure WebGL
-    resizeCanvas();
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight - window.innerHeight*0.3;
+    gl.viewport(0,0, canvas.width, canvas.height);
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
     addEventListeners();
@@ -89,6 +92,9 @@ function resizeCanvas()
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight - window.innerHeight*0.3;
     gl.viewport(0,0, canvas.width, canvas.height);
+    var sxTemp = canvas.height/canvas.width >= 1 ? canvas.height/canvas.width : 1;
+    var syTemp = canvas.width/canvas.height >= 1 ? canvas.width/canvas.height : 1;
+    currentInstance.m = mult(mat4(), scalem(1,syTemp, 1));
 }
 
 function keyPress(ev)
@@ -106,14 +112,15 @@ function create(type) {
     tx = 0; ty = 0; tz = 0;
     rx = 0; ry = 0; rz = 0;
     sx = 1; sy = 1; sz = 1;
-
+    var m = mult(mat4(), scalem(1,canvas.width/canvas.height, 1)); //mult(translate(tx, ty, tz), mult(rotateX(rx), mult(rotateY(ry), mult(rotateZ(rz), scalem(1, canvas.width/canvas.height, 1)))));
     switch(type)
     {
-        case 'cube': currentInstance = {m: mat4(), f: cubeDraw}; break;
-        case 'sphere':  currentInstance = {m: mat4(), f: sphereDraw}; break;
-        case 'cylinder': currentInstance = {m: mat4(), f: cylinderDraw}; break;
-        case 'torus': currentInstance = {m: mat4(), f: torusDraw}; break;
-        case 'bunny': currentInstance = {m: mat4(), f: bunnyDraw}; break;
+        
+        case 'cube': currentInstance = {m: m, f: cubeDraw}; break;
+        case 'sphere':  currentInstance = {m: m, f: sphereDraw}; break;
+        case 'cylinder': currentInstance = {m: m, f: cylinderDraw}; break;
+        case 'torus': currentInstance = {m: m, f: torusDraw}; break;
+        case 'bunny': currentInstance = {m: m, f: bunnyDraw}; break;
     }
     document.getElementById(type).checked = true;
     //nInstances++;
@@ -124,19 +131,19 @@ function resetCurrent() {
     rx = 0; ry = 0; rz = 0;
     sx = 1; sy = 1; sz = 1;
 
-    updateMatrixModel();
+    //updateMatrixModel();
 }
-
+/*
 function resetAll() {
     //instances = [];
     //nInstances = 0;
     create('cube');
     resetCurrent();
-}
-
+}*/
+/*
 function updateMatrixModel() {
-    /*instances[nInstances - 1].m*/currentInstance = mult(translate(tx, ty, tz), mult(rotateX(rx), mult(rotateY(ry), mult(rotateZ(rz), scalem(sx, sy, sz)))));
-}
+    /*instances[nInstances - 1].mcurrentInstance.m = mult(translate(tx, ty, tz), mult(rotateX(rx), mult(rotateY(ry), mult(rotateZ(rz), scalem(sx, sy, sz)))));
+}*/
 
 function render() {
     gl.clear(gl.COLOR_BUFFER_BIT);
