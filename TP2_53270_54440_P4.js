@@ -4,13 +4,9 @@ var currentInstance;
 var tx = 0; var ty = 0; var tz = 0;
 var rx = 0; var ry = 0; var rz = 0;
 var sx = 1; var sy = 1; var sz = 1;
+var zoom = 1;
 var mView; var mProjection; var mModel; var mModelLocation;
 var isFilled = false, cullFace = false, zBuffer = false;
-var colors = [
-    vec3(1,0,0),
-    vec3(0,1,0),
-    vec3(0,0,1)
-];
 //const CTM = mult(mat4(), scalem(1,canvas.width/canvas.height, 1));
 
 window.onload = function init() {
@@ -22,7 +18,6 @@ window.onload = function init() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight - window.innerHeight*0.3;
     gl.viewport(0,0, canvas.width, canvas.height);
-    gl.enable(gl.CULL_FACE);
     gl.clearColor(0.5, 0.5, 0.5, 1.0);
 
     addEventListeners();
@@ -48,12 +43,20 @@ window.onload = function init() {
     mViewLocation = gl.getUniformLocation(program, "mView");
     mProjectionLocation = gl.getUniformLocation(program, "mProjection");
 
+    //resizeCanvas();
     render();
 }
 
-canvas.onwheel = function()
+function handleWheel(e)
 {
-
+    var e_delta = (e.deltaY || -e.wheelDelta || e.detail);
+    var delta =  e_delta && ((e_delta >> 10) || 1) || 0;
+    zoom = (delta > 0 || event.detail > 0) ? 1.1 : 0.9;
+    sx *= zoom;
+    sz *= zoom;
+    //sy = canvas.width/canvas.height >= 1 ? canvas.width/canvas.height : 1;
+    sy *= zoom;
+    currentInstance.m = mult(mat4(), scalem(sx,sy, sz));
 }
 
 function addEventListeners()
@@ -82,6 +85,8 @@ function addEventListeners()
     document.getElementById("cylinder").addEventListener("click", function () {create('cylinder')});
     document.getElementById("torus").addEventListener("click", function () {create('torus')});
     document.getElementById("bunny").addEventListener("click", function () {create('bunny')});
+    canvas.addEventListener("wheel", function(){handleWheel(event);});
+    
     //document.getElementById("resetCurrent").addEventListener("click", resetCurrent);
     //document.getElementById("resetAll").addEventListener("click", resetAll);
     addEventListener("keypress", keyPress);
@@ -94,8 +99,13 @@ function resizeCanvas()
     canvas.height = window.innerHeight - window.innerHeight*0.3;
     gl.viewport(0,0, canvas.width, canvas.height);
     var sxTemp = canvas.height/canvas.width >= 1 ? canvas.height/canvas.width : 1;
-    var syTemp = canvas.width/canvas.height >= 1 ? canvas.width/canvas.height : 1;
-    currentInstance.m = mult(mat4(), scalem(1,syTemp, 1));
+    sx = 1;
+    sy = canvas.width/canvas.height >= 1 ? canvas.width/canvas.height : 1;
+    sz = 1;
+    sx *= zoom;
+    sy *= zoom;
+    sz *= zoom;
+    currentInstance.m = mult(mat4(), scalem(sx,sy, sz));
 }
 
 function keyPress(ev)
@@ -107,7 +117,7 @@ function keyPress(ev)
         case 'b': 
             if (cullFace = !cullFace) gl.enable(gl.CULL_FACE);
             else gl.disable(gl.CULL_FACE);
-         break;
+        break;
         case 'z': 
             if (zBuffer = !zBuffer) gl.enable(gl.DEPTH_TEST);
             else gl.disable(gl.DEPTH_TEST);
@@ -130,6 +140,7 @@ function create(type) {
         case 'bunny': currentInstance = {m: m, f: bunnyDraw}; break;
     }
     document.getElementById(type).checked = true;
+    resizeCanvas();
     //nInstances++;
 }
 
