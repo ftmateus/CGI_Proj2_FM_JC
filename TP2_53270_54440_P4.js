@@ -5,7 +5,7 @@ var tx = 0; var ty = 0; var tz = 0;
 var rx = 0; var ry = 0; var rz = 0;
 var sx = 1; var sy = 1; var sz = 1;
 var mView; var mProjection; var mModel; var mModelLocation;
-var isFilled = false;
+var isFilled = false, cullFace = false, zBuffer = false;
 var colors = [
     vec3(1,0,0),
     vec3(0,1,0),
@@ -22,7 +22,8 @@ window.onload = function init() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight - window.innerHeight*0.3;
     gl.viewport(0,0, canvas.width, canvas.height);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.enable(gl.CULL_FACE);
+    gl.clearColor(0.5, 0.5, 0.5, 1.0);
 
     addEventListeners();
 
@@ -103,8 +104,14 @@ function keyPress(ev)
     {
         case 'w': isFilled = false; break;
         case 'f': isFilled = true; break;
-        case 'z': break; //Z-buffer
-        case 'b': break; //back face culling
+        case 'b': 
+            if (cullFace = !cullFace) gl.enable(gl.CULL_FACE);
+            else gl.disable(gl.CULL_FACE);
+         break;
+        case 'z': 
+            if (zBuffer = !zBuffer) gl.enable(gl.DEPTH_TEST);
+            else gl.disable(gl.DEPTH_TEST);
+        break; //Z-buffer 
     }
 }
 
@@ -155,6 +162,7 @@ function render() {
         instances[i].f(gl, program, isFilled);
     }*/
     gl.uniformMatrix4fv(mModelLocation, false, flatten(currentInstance.m));
+    gl.cullFace(gl.BACK);
     currentInstance.f(gl, program, isFilled);
     requestAnimFrame(render);
 }

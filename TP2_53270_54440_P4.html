@@ -35,15 +35,18 @@ uniform mat4 mProjection;
 uniform mat4 mView;
 uniform mat4 mModel;
 
+varying vec4 color;
 void main(){
     gl_Position = mProjection * mView * mModel * vPosition;
+    color = vNormal;
 }
 </script>
 <script id="fragment-shader" type="x-shader/x-fragment">
 precision mediump float;
+varying vec4 color;
 
 void main() {
-    gl_FragColor = vec4(1.0, 1.0, 1.0, 0.0);
+    gl_FragColor = color;
 }
 </script>
 <script type="text/javascript" src="../Common/webgl-utils.js"></script>
