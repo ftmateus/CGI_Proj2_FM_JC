@@ -51,7 +51,6 @@ function handleWheel(e)
     var delta =  e_delta && ((e_delta >> 10) || 1) || 0;
     zoom *= (delta > 0 || event.detail > 0) ? 1.1 : 0.9;
     updateCanvas();
-    currentInstance.m = mat4();
 }
 
 function addEventListeners()
@@ -77,7 +76,7 @@ function updateCanvas()
     var eye = [1, 1, 1];
     var up = [0, 1, 0];
     mView = lookAt(eye, at, up);
-    mProjection = ortho(-1*aspectRatio * zoom, 1*aspectRatio * zoom, -1 * zoom, 1*zoom, 10, -10);
+    mProjection = mult(ortho(-1*aspectRatio, 1*aspectRatio, -1, 1, 10, -10), scalem(zoom, zoom, 1));
 }
 
 function keyPress(ev)
