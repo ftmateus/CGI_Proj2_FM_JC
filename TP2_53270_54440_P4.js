@@ -1,5 +1,4 @@
 var gl; var program, canvas;
-//var instances = []; var nInstances = 0;
 var currentInstance;
 var tx = 0; var ty = 0; var tz = 0;
 var rx = 0; var ry = 0; var rz = 0;
@@ -9,7 +8,6 @@ var mView, mViewLocation; var mProjection, mProjectionLocation; var mModel, mMod
 var isFilled = false, cullFace = false, zBuffer = false;
 const HEIGHT_RATIO = 0.6;
 var zoom = 1;
-//const CTM = mult(mat4(), scalem(1,canvas.width/canvas.height, 1));
 
 window.onload = function init() {
     canvas = document.getElementById("gl-canvas");
@@ -17,8 +15,9 @@ window.onload = function init() {
     if(!gl) { alert("WebGL isn't available"); }
     
     // Configure WebGL
-    updateCanvas();
     gl.clearColor(0.5, 0.5, 0.5, 1.0);
+    updateCanvas();
+    
 
     initObjects();
     create('cube');
@@ -77,7 +76,14 @@ function updateCanvas()
     var up = [0, 1, 0];
     mView = lookAt(eye, at, up);
     mProjection = mult(ortho(-1*aspectRatio, 1*aspectRatio, -1, 1, 10, -10), scalem(zoom, zoom, 1));
+}   
+
+function renderText()
+{
+    var textElement = document.getElementById("text");
+    textElement.textContent = "Z-Buffer: "+zBuffer+"\r\nBack culling: "+cullFace+"\r\n";
 }
+
 
 function keyPress(ev)
 {
@@ -100,15 +106,15 @@ function create(type) {
     tx = 0; ty = 0; tz = 0;
     rx = 0; ry = 0; rz = 0;
     sx = 1; sy = 1; sz = 1;
-    var m = mat4(); //mult(translate(tx, ty, tz), mult(rotateX(rx), mult(rotateY(ry), mult(rotateZ(rz), scalem(1, canvas.width/canvas.height, 1)))));
+    var m = mat4();
     switch(type)
     {
         
-        case 'cube': currentInstance = {m: m, f: cubeDraw}; break;
-        case 'sphere':  currentInstance = {m: m, f: sphereDraw}; break;
-        case 'cylinder': currentInstance = {m: m, f: cylinderDraw}; break;
-        case 'torus': currentInstance = {m: m, f: torusDraw}; break;
-        case 'bunny': currentInstance = {m: m, f: bunnyDraw}; break;
+        case 'cube': currentInstance = {m: m, draw: cubeDraw}; break;
+        case 'sphere':  currentInstance = {m: m, draw: sphereDraw}; break;
+        case 'cylinder': currentInstance = {m: m, draw: cylinderDraw}; break;
+        case 'torus': currentInstance = {m: m, draw: torusDraw}; break;
+        case 'bunny': currentInstance = {m: m, draw: bunnyDraw}; break;
     }
     document.getElementById(type).checked = true;
     updateCanvas();
@@ -118,11 +124,12 @@ function render() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.uniformMatrix4fv(mViewLocation, false, flatten(mView));
     gl.uniformMatrix4fv(mProjectionLocation, false, flatten(mProjection));
-
     gl.uniformMatrix4fv(mModelLocation, false, flatten(currentInstance.m));
+
     gl.cullFace(gl.BACK);
     
-    currentInstance.f(gl, program, isFilled);
+    currentInstance.draw(gl, program, isFilled);
         
+    renderText();
     requestAnimFrame(render);
 }

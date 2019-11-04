@@ -19,6 +19,18 @@
         margin: 4px 2px;
         cursor: pointer;
         }
+        
+    #overlay {
+        position: absolute;
+        left: 0px;
+        top: -12px;
+        color: white;
+        font-size: 12px;
+        font-family: monospace;
+        padding: 1em;
+        white-space: pre-line;
+        user-select: none;
+        }
     
     /*
     canvas {
@@ -67,6 +79,9 @@ void main() {
     <canvas id="gl-canvas">
         Oops... your browser doesn't support the HTML5 canvas element"
     </canvas>
+    <div id="overlay">
+        <div><span id="text"></span></div>
+    </div>
     <div id="buttonsContainer" class = "buttonsContainerStyle">
         <button id="orthogonal" type="button" class = "orthogonalStyle">Ortogonal</button>
         <button id="axonometric" type="button" class = "axonometricStyle">Axonometric</button>
