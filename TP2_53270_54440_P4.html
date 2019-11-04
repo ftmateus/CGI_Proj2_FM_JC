@@ -19,6 +19,7 @@
         margin: 4px 2px;
         cursor: pointer;
         }
+    
     /*
     canvas {
         width:100%;
@@ -74,24 +75,16 @@ void main() {
         <button id="generic" type="button" class = "genericStyle">Generic</button>
         <button id="object" type="button" class = "objectStyle">Object</button>
     </div>
-    <form><!--
-        tx: <input type="range" id="tx" value="0" min="-1" max="1" step="0.1">
-        ty: <input type="range" id="ty" value="0" min="-1" max="1" step="0.1">
-        tz: <input type="range" id="tz" value="0" min="-1" max="1" step="0.1"><br>
-        rx: <input type="range" id="rx" value="0" min="-180" max="180" step="5">
-        ry: <input type="range" id="ry" value="0" min="-180" max="180" step="5">
-        rz: <input type="range" id="rz" value="0" min="-180" max="180" step="5"><br>
-        sx: <input type="range" id="sx" value="1.025" min="0.05" max="2" step="0.01">
-        sy: <input type="range" id="sy" value="1.025" min="0.05" max="2" step="0.01">
-        sz: <input type="range" id="sz" value="1.025" min="0.05" max="2" step="0.01"><br>-->
-        <input type="radio" name = "shape" id="cube" value="Create Cube"> Create Cube<br>
-        <input type="radio" name = "shape" id="sphere" value="Create Sphere"> Create Sphere<br>
-        <input type="radio" name = "shape" id="cylinder" value="Create Cylinder"> Create Cylinder<br>
-        <input type="radio" name = "shape" id="torus" value="Create Torus"> Create Torus<br>
-        <input type="radio" name = "shape" id="bunny" value="Create Bunny"> Create Bunny<br>
-        <!--<input type="reset" id="resetCurrent" value="Reset Current">
-        <input type="reset" id="resetAll" value="Reset All"><br>-->
-    </form>
+    <div id="objectContainer" class = "objectStyle">
+        <form>
+            <input type="radio" name = "shape" id="cube" value="Create Cube"> Create Cube<br>
+            <input type="radio" name = "shape" id="sphere" value="Create Sphere"> Create Sphere<br>
+            <input type="radio" name = "shape" id="cylinder" value="Create Cylinder"> Create Cylinder<br>
+            <input type="radio" name = "shape" id="torus" value="Create Torus"> Create Torus<br>
+            <input type="radio" name = "shape" id="bunny" value="Create Bunny"> Create Bunny<br>
+        </form>
+    </div>
+    
 </body>
 
 </html>
