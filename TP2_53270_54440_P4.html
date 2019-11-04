@@ -3,13 +3,14 @@
 <head>
 <title>TP2_53270_54440_P4</title>
 <style>
-    * { margin:0; padding:0;} /* to remove the top and left whitespace */
+    * { margin:0; padding:0;}/* to remove the top and left whitespace */
     
     html, body { width:100%; height:100%; } /* just to be sure these are full screen*/
     
     .buttonsContainerStyle button {
         background-color: rgb(18, 30, 194);
         border: none;
+        justify-content: center;
         color: white;
         padding: 15px 32px;
         text-align: center;
@@ -19,6 +20,13 @@
         margin: 4px 2px;
         cursor: pointer;
         }
+
+    .buttonsContainerStyle 
+    {
+        display: table;
+        margin-right: auto;
+        margin-left: auto;
+    }
         
     #overlay {
         position: absolute;
@@ -31,14 +39,7 @@
         white-space: pre-line;
         user-select: none;
         }
-    
-    /*
-    canvas {
-        width:100%;
-        height:75%;
-        background: rgb(84, 84, 100);  /* to show the canvas bounds */
-        /*display:block; */    /* to remove the scrollbars    
-}*/
+     
 </style>
 <script id="vertex-shader" type="x-shader/x-vertex">
 attribute vec4 vPosition;

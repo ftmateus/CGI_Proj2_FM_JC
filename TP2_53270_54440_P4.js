@@ -44,7 +44,7 @@ function initObjects()
     bunnyInit(gl);
 }
 
-function handleWheel(e)
+function zoomCanvas(e)
 {
     var e_delta = (e.deltaY || -e.wheelDelta || e.detail);
     var delta =  e_delta && ((e_delta >> 10) || 1) || 0;
@@ -59,7 +59,7 @@ function addEventListeners()
     document.getElementById("cylinder").addEventListener("click", function () {create('cylinder')});
     document.getElementById("torus").addEventListener("click", function () {create('torus')});
     document.getElementById("bunny").addEventListener("click", function () {create('bunny')});
-    canvas.addEventListener("wheel", function(){handleWheel(event);});
+    canvas.addEventListener("wheel", function(){zoomCanvas(event);});
     addEventListener("keypress", keyPress);
     window.addEventListener('resize', updateCanvas, false);
 }
@@ -108,8 +108,7 @@ function create(type) {
     sx = 1; sy = 1; sz = 1;
     var m = mat4();
     switch(type)
-    {
-        
+    {    
         case 'cube': currentInstance = {m: m, draw: cubeDraw}; break;
         case 'sphere':  currentInstance = {m: m, draw: sphereDraw}; break;
         case 'cylinder': currentInstance = {m: m, draw: cylinderDraw}; break;
@@ -117,6 +116,7 @@ function create(type) {
         case 'bunny': currentInstance = {m: m, draw: bunnyDraw}; break;
     }
     document.getElementById(type).checked = true;
+    zoom = 1;
     updateCanvas();
 }
 
