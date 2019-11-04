@@ -80,8 +80,8 @@ function updateCanvas()
 
 function renderText()
 {
-    var textElement = document.getElementById("text");
-    textElement.textContent = "Z-Buffer: "+zBuffer+"\r\nBack culling: "+cullFace+"\r\n";
+    document.getElementById("zbuffer").textContent = zBuffer;
+    document.getElementById("backculling").textContent = cullFace;
 }
 
 
