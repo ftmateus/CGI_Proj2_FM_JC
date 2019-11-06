@@ -8,11 +8,16 @@ var mView, mViewLocation; var mProjection, mProjectionLocation; var mModel, mMod
 var isFilled = false, cullFace = false, zBuffer = false;
 const HEIGHT_RATIO = 0.6;
 var zoom = 1;
+var at = [0, 0, 0];
+var eye = [1, 1, 1];
+var up = [0, 1, 0];
+
 
 window.onload = function init() {
     canvas = document.getElementById("gl-canvas");
     gl = WebGLUtils.setupWebGL(canvas);
     if(!gl) { alert("WebGL isn't available"); }
+    openTab("object"); 
     
     // Configure WebGL
     gl.clearColor(0.5, 0.5, 0.5, 1.0);
@@ -33,6 +38,30 @@ window.onload = function init() {
     addEventListeners();
 
     render();
+}
+
+function openTab(tabName) 
+{
+    // Hide all tabs
+    var tabContent = document.getElementsByClassName("tabStyle");
+    var tabLinks = document.getElementsByClassName("buttonStyle");
+    for (var i=0; i<tabContent.length; i++)
+        tabContent[i].style.display = "none";
+    for (var i=0; i<tabLinks.length; i++)
+        tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+
+    // Activate the requested tab and append 'active' to their class name
+    document.getElementById(tabName+"Tab").style.display = "block";
+    /*
+    var elems = document.getElementsByClassName("buttonsContainer")
+    for (var i=0; i<elems.length; i++)
+    {
+        if (elems[i].innerHTML == tabName)
+        {
+            elems[i].className += " active";
+            break;
+        }
+    }*/
 }
 
 function initObjects()
@@ -62,18 +91,21 @@ function addEventListeners()
     canvas.addEventListener("wheel", function(){zoomCanvas(event);});
     addEventListener("keypress", keyPress);
     window.addEventListener('resize', updateCanvas, false);
-}
+    document.getElementById("object").addEventListener("click", function() {openTab("object")});
+    document.getElementById("orthogonal").addEventListener("click", function() {openTab("ortogonal")});
+    document.getElementById("axonometric").addEventListener("click", function() {openTab("axonometric")});
+    document.getElementById("oblique").addEventListener("click", function() {openTab("oblique")});
+    document.getElementById("perspective").addEventListener("click", function() {openTab("perspective")});
+    document.getElementById("generic").addEventListener("click", function() {openTab("generic")});
 
+}
 function updateCanvas()
 {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight*HEIGHT_RATIO;
     var aspectRatio = canvas.width/canvas.height;
     gl.viewport(0,0, canvas.width, canvas.height);
-
-    var at = [0, 0, 0];
-    var eye = [1, 1, 1];
-    var up = [0, 1, 0];
+        
     mView = lookAt(eye, at, up);
     mProjection = mult(ortho(-1*aspectRatio, 1*aspectRatio, -1, 1, 10, -10), scalem(zoom, zoom, 1));
 }   
