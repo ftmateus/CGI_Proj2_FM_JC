@@ -23,7 +23,6 @@ window.onload = function init() {
     gl.clearColor(0.5, 0.5, 0.5, 1.0);
     updateCanvas();
     
-
     initObjects();
     create('cube');
 
@@ -48,7 +47,11 @@ function openTab(tabName)
     for (var i=0; i<tabContent.length; i++)
         tabContent[i].style.display = "none";
     for (var i=0; i<tabLinks.length; i++)
-        tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+    {
+        //tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+        tabLinks[i].style.backgroundColor = "blue";
+    }
+    document.getElementById(tabName).style.backgroundColor = "red";
 
     // Activate the requested tab and append 'active' to their class name
     document.getElementById(tabName+"Tab").style.display = "block";
@@ -92,7 +95,7 @@ function addEventListeners()
     addEventListener("keypress", keyPress);
     window.addEventListener('resize', updateCanvas, false);
     document.getElementById("object").addEventListener("click", function() {openTab("object")});
-    document.getElementById("orthogonal").addEventListener("click", function() {openTab("ortogonal")});
+    document.getElementById("orthogonal").addEventListener("click", function() {openTab("orthogonal")});
     document.getElementById("axonometric").addEventListener("click", function() {openTab("axonometric")});
     document.getElementById("oblique").addEventListener("click", function() {openTab("oblique")});
     document.getElementById("perspective").addEventListener("click", function() {openTab("perspective")});
