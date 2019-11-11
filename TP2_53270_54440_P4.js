@@ -1,4 +1,4 @@
-var gl; var program, canvas;
+var gl; var programDefault, programSuperQuad, canvas;
 var currentInstance;
 var tx = 0; var ty = 0; var tz = 0;
 var rx = 0; var ry = 0; var rz = 0;
@@ -11,6 +11,8 @@ var zoom = 1;
 var at = [0, 0, 0];
 var eye = [1, 1, 1];
 var up = [0, 1, 0];
+var e1 = 5, e2 = 1;
+var currentProgram
 
 
 window.onload = function init() {
@@ -27,12 +29,10 @@ window.onload = function init() {
     create('cube');
 
     // Load shaders and initialize attribute buffers
-    program = initShaders(gl, "vertex-shader", "fragment-shader");
-    gl.useProgram(program);
-
-    mModelLocation = gl.getUniformLocation(program, "mModel");
-    mViewLocation = gl.getUniformLocation(program, "mView");
-    mProjectionLocation = gl.getUniformLocation(program, "mProjection");
+    programDefault = initShaders(gl, "vertex-shader", "fragment-shader");
+    programSuperQuad = initShaders(gl, "vertex-shader-superquad", "fragment-shader");
+    this.currentProgram = this.programDefault;
+    gl.useProgram(programDefault);
 
     addEventListeners();
 
@@ -74,6 +74,7 @@ function initObjects()
     cylinderInit(gl);
     torusInit(gl);
     bunnyInit(gl);
+    superquadricInit(gl, programSuperQuad);
 }
 
 function zoomCanvas(e)
@@ -91,6 +92,7 @@ function addEventListeners()
     document.getElementById("cylinder").addEventListener("click", function () {create('cylinder')});
     document.getElementById("torus").addEventListener("click", function () {create('torus')});
     document.getElementById("bunny").addEventListener("click", function () {create('bunny')});
+    document.getElementById("superquadric").addEventListener("click", function () {create('superquadric')});
     canvas.addEventListener("wheel", function(){zoomCanvas(event);});
     addEventListener("keypress", keyPress);
     window.addEventListener('resize', updateCanvas, false);
@@ -100,8 +102,14 @@ function addEventListeners()
     document.getElementById("oblique").addEventListener("click", function() {openTab("oblique")});
     document.getElementById("perspective").addEventListener("click", function() {openTab("perspective")});
     document.getElementById("generic").addEventListener("click", function() {openTab("generic")});
-
+    document.getElementById("e1Range").addEventListener("input", function(){
+        e1 = document.getElementById("e1Range").value
+    });
+    document.getElementById("e2Range").addEventListener("input", function(){
+        e2 = document.getElementById("e2Range").value
+    });
 }
+
 function updateCanvas()
 {
     canvas.width = window.innerWidth;
@@ -149,21 +157,39 @@ function create(type) {
         case 'cylinder': currentInstance = {m: m, draw: cylinderDraw}; break;
         case 'torus': currentInstance = {m: m, draw: torusDraw}; break;
         case 'bunny': currentInstance = {m: m, draw: bunnyDraw}; break;
+        case 'superquadric': currentInstance = {m: m, draw: superquadricDraw}; break;
     }
+    if (type == "superquadric")
+    {
+        document.getElementById("slidersContainer").style.display = "block";
+        currentProgram = programSuperQuad;
+    }
+    else
+    {
+        document.getElementById("slidersContainer").style.display = "none";
+        currentProgram = programDefault;
+    }
+        
     document.getElementById(type).checked = true;
     zoom = 1;
     updateCanvas();
 }
 
 function render() {
+    gl.useProgram(currentProgram);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    mModelLocation = gl.getUniformLocation(currentProgram, "mModel");
+    mViewLocation = gl.getUniformLocation(currentProgram, "mView");
+    mProjectionLocation = gl.getUniformLocation(currentProgram, "mProjection");
+
     gl.uniformMatrix4fv(mViewLocation, false, flatten(mView));
     gl.uniformMatrix4fv(mProjectionLocation, false, flatten(mProjection));
     gl.uniformMatrix4fv(mModelLocation, false, flatten(currentInstance.m));
 
     gl.cullFace(gl.BACK);
     
-    currentInstance.draw(gl, program, isFilled);
+    currentInstance.draw(gl, currentProgram, isFilled, e1, e2);
         
     renderText();
     requestAnimFrame(render);

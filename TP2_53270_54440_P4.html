@@ -35,6 +35,13 @@
         margin-left: 2%;
         font-size: larger;
     }
+
+    .slidersStyle
+    {
+        display: none;
+    }
+
+    
         
     #overlay {
         position: absolute;
@@ -71,6 +78,36 @@ void main() {
     gl_FragColor = color;
 }
 </script>
+<script id="vertex-shader-superquad" type="x-shader/x-vertex">
+    attribute float theta;
+    attribute float phi;
+    attribute float r;
+
+    uniform mat4 mProjection;
+    uniform mat4 mView;
+    uniform mat4 mModel;
+    uniform float e1;
+    uniform float e2;
+
+    varying vec4 color;
+
+    float expOperator(float x, float y)
+    {
+        return sign(x)*pow(abs(x), y);
+    }
+
+    void main()
+    {
+        vec4 vPosition;
+        vPosition.x = r*expOperator(cos(phi), e1)*expOperator(cos(theta), e2);
+        vPosition.y = r*expOperator(sin(phi), e1);
+        vPosition.z = r*expOperator(cos(phi), e1)*expOperator(sin(theta), e2);
+        vPosition.w = 1.0;
+        gl_Position = mProjection * mView * mModel * vPosition;
+        color = normalize(vPosition);
+
+    }
+</script>
 <script type="text/javascript" src="../Common/webgl-utils.js"></script>
 <script type="text/javascript" src="../Common/initShaders.js"></script>
 <script type="text/javascript" src="../Common/MV.js"></script>
@@ -80,6 +117,7 @@ void main() {
 <script type="text/javascript" src="../Common/torus.js"></script>
 <script type="text/javascript" src="../Common/bunny.js"></script>
 <script type="text/javascript" src="../Common/bunny-data.js"></script>
+<script type="text/javascript" src="superquadric.js"></script>
 <script type="text/javascript" src="TP2_53270_54440_P4.js"></script>
 </head>
 
@@ -107,7 +145,13 @@ void main() {
             <input type="radio" name = "shape" id="cylinder" value="Create Cylinder"> Create Cylinder<br>
             <input type="radio" name = "shape" id="torus" value="Create Torus"> Create Torus<br>
             <input type="radio" name = "shape" id="bunny" value="Create Bunny"> Create Bunny<br>
+            <input type="radio" name = "shape" id="superquadric" value="Create Bunny"> Create Superquadric<br>
         </form>
+        <div id="slidersContainer" class = "slidersStyle"> 
+            e1:<input type="range" min="0" max="30" step="0.05" value="1" class="slider" id="e1Range">
+            e2:<input type="range" min="0" max="30" step="0.05" value="1" class="slider" id="e2Range">
+        </div>
+       
     </div>
     <div id="orthogonalTab" class = "tabStyle">Orthogonal</div>
     <div id="axonometricTab" class = "tabStyle">Axonometric</div>
