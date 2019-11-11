@@ -56,7 +56,7 @@
         }
      
 </style>
-<script id="vertex-shader" type="x-shader/x-vertex">
+<script id="vertex-shader-default" type="x-shader/x-vertex">
 attribute vec4 vPosition;
 attribute vec4 vNormal;
 
@@ -82,6 +82,7 @@ void main() {
     attribute float theta;
     attribute float phi;
     attribute float r;
+    attribute vec4 vNormal;
 
     uniform mat4 mProjection;
     uniform mat4 mView;
@@ -98,13 +99,14 @@ void main() {
 
     void main()
     {
+        gl_PointSize = 10.0;
         vec4 vPosition;
         vPosition.x = r*expOperator(cos(phi), e1)*expOperator(cos(theta), e2);
         vPosition.y = r*expOperator(sin(phi), e1);
         vPosition.z = r*expOperator(cos(phi), e1)*expOperator(sin(theta), e2);
         vPosition.w = 1.0;
         gl_Position = mProjection * mView * mModel * vPosition;
-        color = normalize(vPosition);
+        color = vNormal;
 
     }
 </script>
@@ -148,8 +150,8 @@ void main() {
             <input type="radio" name = "shape" id="superquadric" value="Create Bunny"> Create Superquadric<br>
         </form>
         <div id="slidersContainer" class = "slidersStyle"> 
-            e1:<input type="range" min="0" max="30" step="0.05" value="1" class="slider" id="e1Range">
-            e2:<input type="range" min="0" max="30" step="0.05" value="1" class="slider" id="e2Range">
+            e1:<input type="range" min="0.01" max="30" step="0.05" value="1" class="slider" id="e1Range">
+            e2:<input type="range" min="0.01" max="30" step="0.05" value="1" class="slider" id="e2Range">
         </div>
        
     </div>

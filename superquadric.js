@@ -13,9 +13,7 @@ var SUPERQUAD_LONS=30;
 
 var programSup;
 
-function superquadricInit(gl, nlat, nlon, program) {
-    programSup = program;
-    gl.useProgram(programSup);
+function superquadricInit(gl, nlat, nlon) {
     nlat = nlat | SUPERQUAD_LATS;
     nlon = nlon | SUPERQUAD_LONS;
     superquadricBuild(nlat, nlon);
@@ -32,36 +30,35 @@ function superquadricBuild(nlat, nlon)
     // phi will be latitude
     // theta will be longitude
     
-    gl.useProgram(programSup);
-    superquad_points_buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, superquad_points_buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, 200000, gl.STATIC_DRAW);
-
     var d_phi = Math.PI / (nlat+1);
     var d_theta = 2*Math.PI / nlon;
     var r = 0.5;
     
-    var points = 0;
-
     // Generate north polar cap
     var north = vec3(0,r,0);
-    var northData = new Float32Array([Math.PI/2, Math.PI/2, r]);
-    gl.bufferSubData(gl.ARRAY_BUFFER, (points++)*(4+4+4), northData);
+    var northData = vec3(Math.PI/2, Math.PI/2, r);
+    superquad_points.push(northData);
+    superquad_normals.push(vec3(0,1,0));
     
     
     // Generate middle
     for(var i=0, phi=Math.PI/2-d_phi; i<nlat; i++, phi-=d_phi) {
         for(var j=0, theta=0; j<nlon; j++, theta+=d_theta) {
-            var pointData = new Float32Array([theta, phi, r]);
-            gl.bufferSubData(gl.ARRAY_BUFFER, (points++)*(4+4+4), pointData);
+            var pt = vec3(theta, phi, r);
+            superquad_points.push(pt);
+            var p = vec3(r*Math.cos(phi)*Math.cos(theta),r*Math.sin(phi),r*Math.cos(phi)*Math.sin(theta));
+            var n = vec3(p);
+            superquad_normals.push(normalize(n));
         }
     }
     
     // Generate norh south cap
     var south = vec3(0,-r,0);
-    var southData = new Float32Array([Math.PI/2, Math.PI/2, -r]);
-    gl.bufferSubData(gl.ARRAY_BUFFER, (points++)*(4+4+4), southData);
-    
+    var southData = vec3(Math.PI/2, Math.PI/2, -r);
+    superquad_points.push(southData);
+    superquad_normals.push(vec3(0,-1,0));
+
+
     // Generate the faces
     
     // north pole faces
@@ -136,14 +133,18 @@ function superquadricBuild(nlat, nlon)
     
 }
 
-function superquadricUploadData(gl)
+function superquadricUploadData(gl, program)
 {
+
+    gl.useProgram(program);
+
+    superquad_points_buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, superquad_points_buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(superquad_points), gl.STATIC_DRAW);
     
-    /*
     superquad_normals_buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, superquad_normals_buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, flatten(superquad_normals), gl.STATIC_DRAW);*/
-    
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(superquad_normals), gl.STATIC_DRAW);
     
     superquad_faces_buffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, superquad_faces_buffer);
@@ -163,7 +164,6 @@ function superquadricDrawWireFrame(gl, program)
     gl.vertexAttribPointer(thetaAttrib, 1, gl.FLOAT, false, 4+4+4, 0);
     gl.enableVertexAttribArray(thetaAttrib);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, superquad_points_buffer);
     var phiAttrib = gl.getAttribLocation(program, "phi");
     gl.vertexAttribPointer(phiAttrib, 1, gl.FLOAT, false, 4+4+4, 4);
     gl.enableVertexAttribArray(phiAttrib);
@@ -172,8 +172,11 @@ function superquadricDrawWireFrame(gl, program)
     var rAttrib = gl.getAttribLocation(program, "r");
     gl.vertexAttribPointer(rAttrib, 1, gl.FLOAT, false, 4+4+4, 4+4);
     gl.enableVertexAttribArray(rAttrib);
-    
 
+    gl.bindBuffer(gl.ARRAY_BUFFER, superquad_normals_buffer);
+    var vNormal = gl.getAttribLocation(program, "vNormal");
+    gl.vertexAttribPointer(vNormal, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vNormal);
     
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, superquad_edges_buffer);
     gl.drawElements(gl.LINES, superquad_edges.length, gl.UNSIGNED_SHORT, 0);
@@ -184,10 +187,20 @@ function superquadricDrawFilled(gl, program)
     gl.useProgram(program);
     
     gl.bindBuffer(gl.ARRAY_BUFFER, superquad_points_buffer);
-    var vPosition = gl.getAttribLocation(program, "vPosition");
-    gl.vertexAttribPointer(vPosition, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(vPosition);
-    
+    var thetaAttrib = gl.getAttribLocation(program, "theta");
+    gl.vertexAttribPointer(thetaAttrib, 1, gl.FLOAT, false, 4+4+4, 0);
+    gl.enableVertexAttribArray(thetaAttrib);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, superquad_points_buffer);
+    var phiAttrib = gl.getAttribLocation(program, "phi");
+    gl.vertexAttribPointer(phiAttrib, 1, gl.FLOAT, false, 4+4+4, 4);
+    gl.enableVertexAttribArray(phiAttrib);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, superquad_points_buffer);
+    var rAttrib = gl.getAttribLocation(program, "r");
+    gl.vertexAttribPointer(rAttrib, 1, gl.FLOAT, false, 4+4+4, 4+4);
+    gl.enableVertexAttribArray(rAttrib);
+
     gl.bindBuffer(gl.ARRAY_BUFFER, superquad_normals_buffer);
     var vNormal = gl.getAttribLocation(program, "vNormal");
     gl.vertexAttribPointer(vNormal, 3, gl.FLOAT, false, 0, 0);

@@ -11,7 +11,7 @@ var zoom = 1;
 var at = [0, 0, 0];
 var eye = [1, 1, 1];
 var up = [0, 1, 0];
-var e1 = 5, e2 = 1;
+var e1 = 1, e2 = 1; // e1 was at 5
 var currentProgram
 
 
@@ -25,13 +25,13 @@ window.onload = function init() {
     gl.clearColor(0.5, 0.5, 0.5, 1.0);
     updateCanvas();
     
+    // Load shaders and initialize attribute buffers
+    programDefault = initShaders(gl, "vertex-shader-default", "fragment-shader");
+    programSuperQuad = initShaders(gl, "vertex-shader-superquad", "fragment-shader");
+
     initObjects();
     create('cube');
 
-    // Load shaders and initialize attribute buffers
-    programDefault = initShaders(gl, "vertex-shader", "fragment-shader");
-    programSuperQuad = initShaders(gl, "vertex-shader-superquad", "fragment-shader");
-    this.currentProgram = this.programDefault;
     gl.useProgram(programDefault);
 
     addEventListeners();
@@ -135,7 +135,11 @@ function keyPress(ev)
         case 'w': isFilled = false; break;
         case 'f': isFilled = true; break;
         case 'b': 
-            if (cullFace = !cullFace) gl.enable(gl.CULL_FACE);
+            if (cullFace = !cullFace) 
+            {
+                gl.enable(gl.CULL_FACE);
+                gl.frontFace(gl.CCW);
+            }
             else gl.disable(gl.CULL_FACE);
         break;
         case 'z': 
@@ -149,16 +153,6 @@ function create(type) {
     tx = 0; ty = 0; tz = 0;
     rx = 0; ry = 0; rz = 0;
     sx = 1; sy = 1; sz = 1;
-    var m = mat4();
-    switch(type)
-    {    
-        case 'cube': currentInstance = {m: m, draw: cubeDraw}; break;
-        case 'sphere':  currentInstance = {m: m, draw: sphereDraw}; break;
-        case 'cylinder': currentInstance = {m: m, draw: cylinderDraw}; break;
-        case 'torus': currentInstance = {m: m, draw: torusDraw}; break;
-        case 'bunny': currentInstance = {m: m, draw: bunnyDraw}; break;
-        case 'superquadric': currentInstance = {m: m, draw: superquadricDraw}; break;
-    }
     if (type == "superquadric")
     {
         document.getElementById("slidersContainer").style.display = "block";
@@ -168,6 +162,19 @@ function create(type) {
     {
         document.getElementById("slidersContainer").style.display = "none";
         currentProgram = programDefault;
+    }
+    
+    gl.useProgram(currentProgram);
+
+    var m = mat4();
+    switch(type)
+    {    
+        case 'cube': currentInstance = {m: m, draw: cubeDraw}; break;
+        case 'sphere':  currentInstance = {m: m, draw: sphereDraw}; break;
+        case 'cylinder': currentInstance = {m: m, draw: cylinderDraw}; break;
+        case 'torus': currentInstance = {m: m, draw: torusDraw}; break;
+        case 'bunny': currentInstance = {m: m, draw: bunnyDraw}; break;
+        case 'superquadric': currentInstance = {m: m, draw: superquadricDraw}; break;
     }
         
     document.getElementById(type).checked = true;
