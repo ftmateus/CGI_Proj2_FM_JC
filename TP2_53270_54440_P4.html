@@ -41,8 +41,6 @@
         display: none;
     }
 
-    
-        
     #overlay {
         position: absolute;
         left: 0px;
@@ -155,8 +153,14 @@ void main() {
         </div>
        
     </div>
-    <div id="orthogonalTab" class = "tabStyle">Orthogonal</div>
-    <div id="axonometricTab" class = "tabStyle">Axonometric</div>
+    <div id="orthogonalTab" class = "tabStyle">
+        <button id="mainElevation" type="button" class = "orthoStyle">Main Elevation</button><br>
+        <button id="rightElevation" type="button" class = "orthoStyle">Lateral Right Elevation</button><br>
+        <button id="floorPlan" type="button" class = "orthoStyle">Floor plan</button>
+    </div>
+    <div id="axonometricTab" class = "tabStyle">
+        <button id="isometric" type="button" class = "axonoStyle">Isometric</button><br>
+    </div>
     <div id="obliqueTab" class = "tabStyle">oblique</div>
     <div id="perspectiveTab" class = "tabStyle">perspective</div>
     <div id="genericTab" class = "tabStyle">generic</div>

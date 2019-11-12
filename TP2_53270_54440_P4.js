@@ -9,10 +9,14 @@ var isFilled = false, cullFace = false, zBuffer = false;
 const HEIGHT_RATIO = 0.6;
 var zoom = 1;
 var at = [0, 0, 0];
-var eye = [1, 1, 1];
+var eye = [1, -1, 0];
 var up = [0, 1, 0];
 var e1 = 1, e2 = 1; // e1 was at 5
-var currentProgram
+var currentProgram;
+const ISOMETRIC_AXONO = lookAt([1, 1, 1], [0, 0, 0], [0, 1, 0]);
+const MAIN_ELEVATION_ORTHO = mult(mat4(), scalem(1,1,0));//lookAt([1, 0, 0], [0, 0, 0], [0, 1, 0]);
+const PLANE_FLOOR_ORTHO = mult(MAIN_ELEVATION_ORTHO, rotateX(90));
+const RIGHT_ELEVATION_ORTHO = mult(MAIN_ELEVATION_ORTHO, rotateY(-90));
 
 
 window.onload = function init() {
@@ -30,7 +34,8 @@ window.onload = function init() {
     programSuperQuad = initShaders(gl, "vertex-shader-superquad", "fragment-shader");
 
     initObjects();
-    create('cube');
+    mView = ISOMETRIC_AXONO;
+    create('bunny');
 
     gl.useProgram(programDefault);
 
@@ -108,6 +113,22 @@ function addEventListeners()
     document.getElementById("e2Range").addEventListener("input", function(){
         e2 = document.getElementById("e2Range").value
     });
+    document.getElementById("mainElevation").addEventListener("click", function()
+    {
+        mView = MAIN_ELEVATION_ORTHO;
+    });
+    document.getElementById("floorPlan").addEventListener("click", function()
+    {
+        mView = PLANE_FLOOR_ORTHO;
+    });
+    document.getElementById("rightElevation").addEventListener("click", function()
+    {
+        mView = RIGHT_ELEVATION_ORTHO;
+    });
+    document.getElementById("isometric").addEventListener("click", function()
+    {
+        mView = ISOMETRIC_AXONO;
+    });
 }
 
 function updateCanvas()
@@ -117,7 +138,7 @@ function updateCanvas()
     var aspectRatio = canvas.width/canvas.height;
     gl.viewport(0,0, canvas.width, canvas.height);
         
-    mView = lookAt(eye, at, up);
+    //mView = MAIN_ELEVATION_ORTHO;
     mProjection = mult(ortho(-1*aspectRatio, 1*aspectRatio, -1, 1, 10, -10), scalem(zoom, zoom, 1));
 }   
 

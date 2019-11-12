@@ -34,6 +34,7 @@ function superquadricBuild(nlat, nlon)
     var d_theta = 2*Math.PI / nlon;
     var r = 0.5;
     
+    
     // Generate north polar cap
     var north = vec3(0,r,0);
     var northData = vec3(Math.PI/2, Math.PI/2, r);
