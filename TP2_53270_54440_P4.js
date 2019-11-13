@@ -193,7 +193,7 @@ function addEventListeners()
     document.getElementById("dvalue").addEventListener("input", function(){
         d = document.getElementById("dvalue").value;
         mView = mat4();
-        mView[3][3] = 0;
+        mView[2][2] = 0;
         mView[3][2] = -(1/d);
         
     });
