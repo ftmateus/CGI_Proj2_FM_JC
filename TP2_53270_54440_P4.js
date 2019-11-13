@@ -201,10 +201,17 @@ function addEventListeners()
     {
         //openTab("generic");
         mView = ISOMETRIC_AXONO;
+        
         document.getElementById("gammaObl").value = 0;
         document.getElementById("thetaObl").value = 0;
         document.getElementById("gammaAxo").value = 1;
         document.getElementById("thetaAxo").value = 1;
+
+        document.getElementById("gammaOblOut").value = 0;
+        document.getElementById("thetaOblOut").value = 0;
+        document.getElementById("gammaAxoOut").value = 1;
+        document.getElementById("thetaAxoOut").value = 1;
+
         document.getElementById("dvalue").value = 0;
 
     });
