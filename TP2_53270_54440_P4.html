@@ -131,12 +131,12 @@ void main() {
         Back Culling: <span id="backculling"></span>
     </div>
     <div id="buttonsContainer" class = "buttonsContainerStyle">
-        <button id="orthogonal" type="button" class = "buttonStyle">Orthogonal</button>
+        <button id="orthogonal"  type="button" class = "buttonStyle">Orthogonal</button>
         <button id="axonometric" type="button" class = "buttonStyle">Axonometric</button>
-        <button id="oblique" type="button" class = "buttonStyle">Oblique</button>
+        <button id="oblique"     type="button" class = "buttonStyle">Oblique</button>
         <button id="perspective" type="button" class = "buttonStyle">Perspective</button>
-        <button id="generic" type="button" class = "buttonStyle">Generic</button>
-        <button id="object" type="button" class = "buttonStyle">Object</button>
+        <button id="reset"       type="reset"  class = "buttonStyle">Reset</button>
+        <button id="object"      type="button" class = "buttonStyle">Object</button>
     </div>
     <div id="objectTab" class = "tabStyle" >
         <form>
@@ -153,17 +153,46 @@ void main() {
         </div>
        
     </div>
-    <div id="orthogonalTab" class = "tabStyle">
-        <button id="mainElevation" type="button" class = "orthoStyle">Main Elevation</button><br>
-        <button id="rightElevation" type="button" class = "orthoStyle">Lateral Right Elevation</button><br>
-        <button id="floorPlan" type="button" class = "orthoStyle">Floor plan</button>
+    <div id="orthogonalTab" class = "tabStyle">Orthogonal
+        <form>
+            <input type="radio" id="mainElevation"  name = "ortProjection" class = "orthoStyle">Main Elevation<br>
+            <input type="radio" id="rightElevation" name = "ortProjection" class = "orthoStyle">Lateral Right Elevation<br>
+            <input type="radio" id="floorPlan"      name = "ortProjection" class = "orthoStyle">Floor plan
+        </form> 
     </div>
-    <div id="axonometricTab" class = "tabStyle">
-        <button id="isometric" type="button" class = "axonoStyle">Isometric</button><br>
+    
+    <div id="axonometricTab" class = "tabStyle">Axonometric
+        <form>
+            <input type="radio" name = "axoProjection" id="isometric" value="Isometric"> Isometric<br>
+            <input type="radio" name = "axoProjection" id="dimetric" value="Dimetric"> Dimetric<br>
+            <input type="radio" name = "axoProjection" id="trimetric" value="Trimetric"> Trimetric<br>
+            <input type="radio" name = "axoProjection" id="freeAxo" value="Free"> Free<br>
+                <div id="axoFreeContainer" class = "valueStyle">
+                    <input type = "range" class="slider" id="gammaAxo" min=0 max=45 value=1 step=0.5 oninput="gammaAxoOut.value = gammaAxo.value"> Gamma = <output id="gammaAxoOut">1</output> <br>
+                    <input type = "range" class="slider" id="thetaAxo" min=0 max=45 value=1 step=0.5 oninput="thetaAxoOut.value = thetaAxo.value"> Theta = <output id="thetaAxoOut">1</output> <br>
+                </div>
+        </form>
     </div>
-    <div id="obliqueTab" class = "tabStyle">oblique</div>
-    <div id="perspectiveTab" class = "tabStyle">perspective</div>
-    <div id="genericTab" class = "tabStyle">generic</div>
+    <div id="obliqueTab" class = "tabStyle">Oblique
+        <form>
+            <input type="radio" name = "oblProjection" id="cavaleira" value="Cavaleira"> Cavaleira<br>
+            <input type="radio" name = "oblProjection" id="gabinete"  value="Gabinete"> Gabinete<br>
+            <input type="radio" name = "oblProjection" id="freeObl"   value="Free"> Free<br>
+                <div id="oblFreeContainer" class = "valueStyle"> 
+                    <input type = "range" class="slider" id="gammaObl" min=0 max=5 value=1 step = 0.05 oninput="gammaOblOut.value = gammaObl.value"> Gamma = <output id="gammaOblOut">1</output> <br>
+                    <input type = "range" class="slider" id="thetaObl" min=0 max=360 value=0 step = 0.05  oninput="thetaOblOut.value = thetaObl.value"> Theta = <output id="thetaOblOut">1</output> <br>
+                </div>
+                
+        </form>
+    </div>
+    <div id="perspectiveTab" class = "tabStyle">Perspective 
+        <form>
+            Projection center (0,0,
+            <input type = "range" name = "dvalue" id="dvalue" value=0 min=0 max=5 step = 0.005 oninput="dvalueOut.value = dvalue.value"> ) d = <output id="dvalueOut">1</output> <br>
+               
+        </form>
+    </div>
+    <div id="resetTab" class = "tabStyle">reset</div>
     
 </body>
 

@@ -12,11 +12,13 @@ var at = [0, 0, 0];
 var eye = [1, -1, 0];
 var up = [0, 1, 0];
 var e1 = 1, e2 = 1; // e1 was at 5
+var gamma = 1, theta = 45;
+var d = 0;
 var currentProgram;
 const ISOMETRIC_AXONO = lookAt([1, 1, 1], [0, 0, 0], [0, 1, 0]);
-const MAIN_ELEVATION_ORTHO = mult(mat4(), scalem(1,1,0));//lookAt([1, 0, 0], [0, 0, 0], [0, 1, 0]);
-const PLANE_FLOOR_ORTHO = mult(MAIN_ELEVATION_ORTHO, rotateX(90));
-const RIGHT_ELEVATION_ORTHO = mult(MAIN_ELEVATION_ORTHO, rotateY(-90));
+const MAIN_ELEVATION_ORTHO = mat4();//lookAt([1, 0, 0], [0, 0, 0], [0, 1, 0]);
+const PLANE_FLOOR_ORTHO = rotateX(90);
+const RIGHT_ELEVATION_ORTHO = rotateY(-90);
 
 
 window.onload = function init() {
@@ -40,7 +42,8 @@ window.onload = function init() {
     gl.useProgram(programDefault);
 
     addEventListeners();
-
+    document.getElementById("oblFreeContainer").style.display = "none";
+    document.getElementById("axoFreeContainer").style.display = "none";
     render();
 }
 
@@ -103,10 +106,108 @@ function addEventListeners()
     window.addEventListener('resize', updateCanvas, false);
     document.getElementById("object").addEventListener("click", function() {openTab("object")});
     document.getElementById("orthogonal").addEventListener("click", function() {openTab("orthogonal")});
+        document.getElementById("mainElevation").addEventListener("click", function(){transformation("orthoPrincipal")});
+        document.getElementById("floorPlan").addEventListener("click", function(){transformation("orthoPlanta")});
+        document.getElementById("rightElevation").addEventListener("click", function(){transformation("orthoDireito")});
     document.getElementById("axonometric").addEventListener("click", function() {openTab("axonometric")});
-    document.getElementById("oblique").addEventListener("click", function() {openTab("oblique")});
-    document.getElementById("perspective").addEventListener("click", function() {openTab("perspective")});
-    document.getElementById("generic").addEventListener("click", function() {openTab("generic")});
+        document.getElementById("isometric").addEventListener("click", function()
+        {
+            document.getElementById("axoFreeContainer").style.display = "none";
+            mView = ISOMETRIC_AXONO;
+        });
+        document.getElementById("dimetric").addEventListener("click", function()
+        {
+            document.getElementById("axoFreeContainer").style.display = "none";
+            axonometricAux(42,7)
+        });
+        document.getElementById("trimetric").addEventListener("click", function()
+        {
+            document.getElementById("axoFreeContainer").style.display = "none";
+            axonometricAux(54.27, 23.27)
+        });
+        document.getElementById("freeAxo").addEventListener("click", function()
+        {
+            document.getElementById("axoFreeContainer").style.display = "block";
+        });
+        document.getElementById("gammaAxo").addEventListener("input", function(){
+            axonometricAux(document.getElementById("gammaAxo").value, document.getElementById("thetaAxo").value)
+        });
+        document.getElementById("thetaAxo").addEventListener("input", function(){
+            axonometricAux(document.getElementById("gammaAxo").value, document.getElementById("thetaAxo").value)
+        });
+       
+    document.getElementById("oblique").addEventListener("click", function() 
+    {
+        openTab("oblique");
+        
+    });
+        document.getElementById("cavaleira").addEventListener("click", function()
+        {
+            document.getElementById("oblFreeContainer").style.display = "none";
+            mView = mat4();
+            mView[2][2]= 0;
+            mView[0][2] = -Math.cos(radians(45));
+            mView[1][2] = -Math.sin(radians(45));
+        });
+        document.getElementById("gabinete").addEventListener("click", function()
+        {
+            document.getElementById("oblFreeContainer").style.display = "none";
+            mView = mat4();
+            mView[2][2]= 0;
+            mView[0][2] = -0.5*Math.cos(radians(45));
+            mView[1][2] = -0.5*Math.sin(radians(45));   
+        });
+        document.getElementById('gammaObl').addEventListener("input", function()
+        {
+
+            gamma = document.getElementById("gammaObl").value;
+            mView = mat4();
+            mView[2][2]= 0;
+            mView[0][2] = -gamma*Math.cos(radians(theta));
+            mView[1][2] = -gamma*Math.sin(radians(theta));
+        });
+        document.getElementById('thetaObl').addEventListener("input", function()
+        {
+            theta = document.getElementById("thetaObl").value;
+            mView = mat4();
+            mView[2][2]= 0;
+            mView[0][2] = -gamma*Math.cos(radians(theta));
+            mView[1][2] = -gamma*Math.sin(radians(theta));
+        });
+        document.getElementById("freeObl").addEventListener("click", function()
+        {
+            document.getElementById("oblFreeContainer").style.display = "block";
+            mView = mat4();
+            mView[2][2]= 0;
+            mView[0][2] = -gamma*Math.cos(radians(theta));
+            mView[1][2] = -gamma*Math.sin(radians(theta));
+        });
+
+
+        
+    document.getElementById("perspective").addEventListener("click", function() 
+    {
+        openTab("perspective");
+    });
+
+    document.getElementById("dvalue").addEventListener("input", function(){
+        d = document.getElementById("dvalue").value;
+        mView = mat4();
+        mView[3][3] = 0;
+        mView[3][2] = -(1/d);
+        
+    });
+    document.getElementById("reset").addEventListener("click", function() 
+    {
+        //openTab("generic");
+        mView = ISOMETRIC_AXONO;
+        document.getElementById("gammaObl").value = 0;
+        document.getElementById("thetaObl").value = 0;
+        document.getElementById("gammaAxo").value = 1;
+        document.getElementById("thetaAxo").value = 1;
+        document.getElementById("dvalue").value = 0;
+
+    });
     document.getElementById("e1Range").addEventListener("input", function(){
         e1 = document.getElementById("e1Range").value
     });
@@ -125,10 +226,18 @@ function addEventListeners()
     {
         mView = RIGHT_ELEVATION_ORTHO;
     });
-    document.getElementById("isometric").addEventListener("click", function()
-    {
-        mView = ISOMETRIC_AXONO;
-    });
+    
+}
+
+function  axonometricAux(a, b){
+    var A = radians(a);
+    var B = radians(b);
+    var gamma = Math.asin(Math.sqrt(Math.tan(A)*Math.tan(B)));
+    var theta = Math.atan(Math.sqrt(Math.tan(A)/Math.tan(B)))-(Math.PI/2);
+    var r1 = Math.cos(gamma);
+    var r2 = Math.cos(theta)/Math.cos(B);
+    var r3 = (-(Math.sin(theta)))/Math.cos(A);
+    mView = mult(mult(rotateX(gamma/(Math.PI/180)),rotateY(theta/(Math.PI/180))), scalem(r2,r1,r3));
 }
 
 function updateCanvas()
@@ -188,6 +297,8 @@ function create(type) {
     gl.useProgram(currentProgram);
 
     var m = mat4();
+
+
     switch(type)
     {    
         case 'cube': currentInstance = {m: m, draw: cubeDraw}; break;
