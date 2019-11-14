@@ -12,7 +12,7 @@ const MAIN_ELEVATION_ORTHO = mat4();//lookAt([1, 0, 0], [0, 0, 0], [0, 1, 0]);
 const PLANE_FLOOR_ORTHO = rotateX(90);
 const RIGHT_ELEVATION_ORTHO = rotateY(-90);
 
-const ISOMETRIC_AXONO = lookAt([1, 1, 1], [0, 0, 0], [0, 1, 0]);
+const ISOMETRIC_AXONO = axonometricMatrix(30,30);//lookAt([1, 1, 1], [0, 0, 0], [0, 1, 0]);
 const DIMETRIC_AXONO = axonometricMatrix(42,7);
 const TRIMETRIC_AXONO = axonometricMatrix(54.27, 23.27);
 
@@ -85,9 +85,7 @@ function axonometricMatrix(a, b){
     if (_argumentsToArray( arguments ).length == 0)
     {
         a = document.getElementById("alphaAxo").value;
-        document.getElementById("alphaAxoOut").value = a;
         b = document.getElementById("betaAxo").value;
-        document.getElementById("betaAxoOut").value = b;
     }
     var A = radians(a);
     var B = radians(b);
@@ -95,7 +93,8 @@ function axonometricMatrix(a, b){
     var theta = Math.atan(Math.sqrt(Math.tan(A)/Math.tan(B)))-(Math.PI/2);
     var r1 = Math.cos(gamma);
     var r2 = Math.cos(theta)/Math.cos(B);
-    var r3 = (-(Math.sin(theta)))/Math.cos(A);
+    var r3 = (-Math.sin(theta))/Math.cos(A);
+    //console.log(r3, r1,  a, b);
     return mult(mult(rotateX(gamma/(Math.PI/180)),rotateY(theta/(Math.PI/180))), scalem(r2,r1,r3));
 }
 
@@ -152,7 +151,7 @@ function reset()
     document.getElementById("dimetric").checked = true;
     document.getElementById("cavalier").checked = true;
     openTab("object"); 
-    zoom = 1;
+    create("cube");
     updateCanvas();
 }
 
