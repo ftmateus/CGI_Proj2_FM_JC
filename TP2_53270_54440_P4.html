@@ -119,6 +119,7 @@ void main() {
 <script type="text/javascript" src="../Common/bunny-data.js"></script>
 <script type="text/javascript" src="superquadric.js"></script>
 <script type="text/javascript" src="TP2_53270_54440_P4.js"></script>
+<script type="text/javascript" src="eventListeners.js"></script>
 </head>
 
 
@@ -128,7 +129,7 @@ void main() {
     </canvas>
     <div id="overlay">
         Z-buffer: <span id="zbuffer"></span>
-        Back Culling: <span id="backculling"></span>
+        Back Face Culling: <span id="backfaceculling"></span>
     </div>
     <div id="buttonsContainer" class = "buttonsContainerStyle">
         <button id="orthogonal"  type="button" class = "buttonStyle">Orthogonal</button>
@@ -147,13 +148,13 @@ void main() {
             <input type="radio" name = "shape" id="bunny" value="Create Bunny"> Create Bunny<br>
             <input type="radio" name = "shape" id="superquadric" value="Create Bunny"> Create Superquadric<br>
         </form>
-        <div id="slidersContainer" class = "slidersStyle"> 
+        <div id="superQuadricSlidersContainer" class = "slidersStyle"> 
             e1:<input type="range" min="0.01" max="30" step="0.05" value="1" class="slider" id="e1Range">
             e2:<input type="range" min="0.01" max="30" step="0.05" value="1" class="slider" id="e2Range">
         </div>
        
     </div>
-    <div id="orthogonalTab" class = "tabStyle">Orthogonal
+    <div id="orthogonalTab" class = "tabStyle">
         <form>
             <input type="radio" id="mainElevation"  name = "ortProjection" class = "orthoStyle">Main Elevation<br>
             <input type="radio" id="rightElevation" name = "ortProjection" class = "orthoStyle">Lateral Right Elevation<br>
@@ -161,31 +162,31 @@ void main() {
         </form> 
     </div>
     
-    <div id="axonometricTab" class = "tabStyle">Axonometric
+    <div id="axonometricTab" class = "tabStyle">
         <form>
             <input type="radio" name = "axoProjection" id="isometric" value="Isometric"> Isometric<br>
             <input type="radio" name = "axoProjection" id="dimetric" value="Dimetric"> Dimetric<br>
             <input type="radio" name = "axoProjection" id="trimetric" value="Trimetric"> Trimetric<br>
             <input type="radio" name = "axoProjection" id="freeAxo" value="Free"> Free<br>
-                <div id="axoFreeContainer" class = "valueStyle">
-                    <input type = "range" class="slider" id="gammaAxo" min=0 max=45 value=1 step=0.5 oninput="gammaAxoOut.value = gammaAxo.value"> Gamma = <output id="gammaAxoOut">1</output> <br>
-                    <input type = "range" class="slider" id="thetaAxo" min=0 max=45 value=1 step=0.5 oninput="thetaAxoOut.value = thetaAxo.value"> Theta = <output id="thetaAxoOut">1</output> <br>
+                <div id="axoFreeContainer" class = "slidersStyle">
+                    <input type = "range" class="slider" id="alphaAxo" min=0 max=45 value=1 step=0.5 oninput="gammaAxoOut.value = gammaAxo.value"> A = <output id="alphaAxoOut">1</output> <br>
+                    <input type = "range" class="slider" id="betaAxo" min=0 max=45 value=1 step=0.5 oninput="thetaAxoOut.value = thetaAxo.value"> B = <output id="betaAxoOut">1</output> <br>
                 </div>
         </form>
     </div>
-    <div id="obliqueTab" class = "tabStyle">Oblique
+    <div id="obliqueTab" class = "tabStyle">
         <form>
-            <input type="radio" name = "oblProjection" id="cavaleira" value="Cavaleira"> Cavaleira<br>
-            <input type="radio" name = "oblProjection" id="gabinete"  value="Gabinete"> Gabinete<br>
+            <input type="radio" name = "oblProjection" id="cavalier" value="Cavalier"> Cavalier<br>
+            <input type="radio" name = "oblProjection" id="cabinet"  value="Cabinet"> Cabinet<br>
             <input type="radio" name = "oblProjection" id="freeObl"   value="Free"> Free<br>
-                <div id="oblFreeContainer" class = "valueStyle"> 
+                <div id="oblFreeContainer" class = "slidersStyle"> 
                     <input type = "range" class="slider" id="gammaObl" min=0 max=5 value=1 step = 0.05 oninput="gammaOblOut.value = gammaObl.value"> Gamma = <output id="gammaOblOut">1</output> <br>
                     <input type = "range" class="slider" id="thetaObl" min=0 max=360 value=0 step = 0.05  oninput="thetaOblOut.value = thetaObl.value"> Theta = <output id="thetaOblOut">1</output> <br>
                 </div>
                 
         </form>
     </div>
-    <div id="perspectiveTab" class = "tabStyle">Perspective 
+    <div id="perspectiveTab" class = "tabStyle"> 
         <form>
             Projection center (0,0,
             <input type = "range" name = "dvalue" id="dvalue" value=0 min=0 max=5 step = 0.005 oninput="dvalueOut.value = dvalue.value"> ) d = <output id="dvalueOut">1</output> <br>
