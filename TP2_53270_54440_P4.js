@@ -7,7 +7,6 @@ const HEIGHT_RATIO = 0.6;
 var zoom = 1;
 var e1 = 1, e2 = 1;
 var d = 0;
-var lastAxonometric = "dimetric", lastOrthogonal = "mainElevation", lastOblique = "cavalier";
 const MAIN_ELEVATION_ORTHO = mat4();//lookAt([1, 0, 0], [0, 0, 0], [0, 1, 0]);
 const PLANE_FLOOR_ORTHO = rotateX(90);
 const RIGHT_ELEVATION_ORTHO = rotateY(-90);
@@ -38,7 +37,6 @@ window.onload = function init() {
     initObjects();
     reset();
     create('cube');
-    
 
     addEventListeners();
     render();
@@ -52,13 +50,11 @@ function openTab(tabName)
     for (var i=0; i<tabContent.length; i++)
         tabContent[i].style.display = "none";
     for (var i=0; i<tabLinks.length; i++)
-    {
-        //tabLinks[i].className = tabLinks[i].className.replace(" active", "");
         tabLinks[i].style.backgroundColor = "blue";
-    }
+
     document.getElementById(tabName).style.backgroundColor = "red";
 
-    // Activate the requested tab and append 'active' to their class name
+    // Activate the requested tab
     document.getElementById(tabName+"Tab").style.display = "block";
 }
 
@@ -80,12 +76,22 @@ function zoomCanvas(e)
     updateCanvas();
 }
 
+/**
+ * Converts from radians to degrees.
+ * @param {} theta value in radians to be converted.
+ */
 function degrees(theta)
 {
     return (theta * 180)/Math.PI;
 }
 
-
+/**
+ * Creates an axonometric view matrix with a and b values.
+ * If no values are specified, creates a matrix with values from
+ * the free axonometric projection sliders.
+ * @param {*} a 
+ * @param {*} b 
+ */
 function axonometricMatrix(a, b){
     if (_argumentsToArray( arguments ).length == 0)
     {
@@ -101,6 +107,13 @@ function axonometricMatrix(a, b){
     return mult(rotateX(degrees(gamma)),rotateY(degrees(theta)));
 }
 
+/**
+ * Creates an oblique view matrix with gamma and theta values.
+ * If no values are specified, creates a matrix with values from
+ * the free oblique projection sliders.
+ * @param {} gamma 
+ * @param {} theta 
+ */
 function obliqueMatrix(gamma, theta)
 {
     if (_argumentsToArray( arguments ).length == 0) 
@@ -122,7 +135,7 @@ function updateCanvas()
     var aspectRatio = canvas.width/canvas.height;
     gl.viewport(0,0, canvas.width, canvas.height);
     
-    mProjection = mult(ortho(-2*aspectRatio, 2*aspectRatio, -2, 2, 10, -10), scalem(zoom, zoom, 1));
+    mProjection = mult(ortho(-1*aspectRatio, 1*aspectRatio, -1, 1, 10, -10), scalem(zoom, zoom, 1));
 }   
 
 function renderOverlay()
@@ -131,13 +144,21 @@ function renderOverlay()
     document.getElementById("backfaceculling").textContent = cullFace;
 }
 
+/**
+ * Switches the current object to the
+ * selected object.
+ */
 function switchObject()
 {
     var selectedValue = document.querySelector('input[name="shape"]:checked').value;
     create(selectedValue);
 }
 
-
+/**
+ * Switches the current projection to the 
+ * selected orthogonal projection. Implements 
+ * the memory interface.
+ */
 function switchOrthogonal()
 {
     var selectedValue = document.querySelector('input[name="ortProjection"]:checked').value;
@@ -149,6 +170,11 @@ function switchOrthogonal()
     }
 }
 
+/**
+ * Switches the current projection to the 
+ * selected axonometric projection. Implements 
+ * the memory interface.
+ */
 function switchAxonometric()
 {
     document.getElementById("axoFreeContainer").style.display = "none";
@@ -192,6 +218,10 @@ function reset()
     updateCanvas();
 }
 
+/**
+ * Handles key selection.
+ * @param {*} ev 
+ */
 function keyPress(ev)
 {
     switch (ev.key)
@@ -202,6 +232,7 @@ function keyPress(ev)
             if (cullFace = !cullFace) 
             {
                 gl.enable(gl.CULL_FACE);
+                gl.cullFace(gl.BACK);
                 gl.frontFace(gl.CCW);
             }
             else gl.disable(gl.CULL_FACE);
@@ -213,6 +244,10 @@ function keyPress(ev)
     }
 }
 
+/**
+ * Creates a shape.
+ * @param {*} type 
+ */
 function create(type) 
 {
     document.getElementById("superQuadricSlidersContainer").style.display = "none";
@@ -244,8 +279,6 @@ function render() {
     gl.uniformMatrix4fv(mProjectionLocation, false, flatten(mProjection));
     gl.uniformMatrix4fv(mModelLocation, false, flatten(mat4()));
 
-    gl.cullFace(gl.BACK);
-    
     currentInstance.draw(gl, currentInstance.program, isFilled, e1, e2);
         
     renderOverlay();

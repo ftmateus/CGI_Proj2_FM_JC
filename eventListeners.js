@@ -19,6 +19,7 @@ function objectEventListeners()
     {
         switchObject();
     });
+    
     document.getElementById("superQuadricSlidersContainer").addEventListener("input", function(){
         e1 = document.getElementById("e1Range").value;
         e2 = document.getElementById("e2Range").value;
