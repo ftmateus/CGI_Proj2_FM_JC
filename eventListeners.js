@@ -3,7 +3,7 @@ function addEventListeners()
     canvas.addEventListener("wheel", function(){zoomCanvas(event);});
     addEventListener("keypress", keyPress);
     window.addEventListener('resize', updateCanvas, false);
-    document.getElementById("reset").addEventListener("click", function() {reset();});
+    document.getElementById("reset").addEventListener("click", reset);
     objectEventListeners();
     orthogonalEventListeners();
     axonometricEventListeners();
@@ -15,10 +15,7 @@ function objectEventListeners()
 {
     document.getElementById("object").addEventListener("click", function() {openTab("object")});
     
-    document.getElementById("objectForm").addEventListener("click", function()
-    {
-        switchObject();
-    });
+    document.getElementById("objectForm").addEventListener("click", switchObject);
     
     document.getElementById("superQuadricSlidersContainer").addEventListener("input", function(){
         e1 = document.getElementById("e1Range").value;
@@ -33,9 +30,7 @@ function orthogonalEventListeners()
         switchOrthogonal();
     });
 
-    document.getElementById("orthogonalForm").addEventListener("click", function() {
-        switchOrthogonal();
-    });
+    document.getElementById("orthogonalForm").addEventListener("click", switchOrthogonal);
 }
 
 function axonometricEventListeners()
@@ -45,9 +40,7 @@ function axonometricEventListeners()
         switchAxonometric();
     });
 
-    document.getElementById("axonometricForm").addEventListener("click", function() {
-        switchAxonometric();
-    });
+    document.getElementById("axonometricForm").addEventListener("click", switchAxonometric);
 
     document.getElementById("axoFreeContainer").addEventListener("input", function(){
         mView = axonometricMatrix();
@@ -59,24 +52,12 @@ function obliqueEventListeners()
     document.getElementById("oblique").addEventListener("click", function() 
     {
         openTab("oblique");
+        switchOblique();
     });
-    document.getElementById("cavalier").addEventListener("click", function()
-    {
-        document.getElementById("oblFreeContainer").style.display = "none";
-        mView = CAVALIER_OBL;
-    });
-    document.getElementById("cabinet").addEventListener("click", function()
-    {
-        document.getElementById("oblFreeContainer").style.display = "none";
-        mView = CABINET_OBL;
-    });
+    document.getElementById("obliqueForm").addEventListener("click", switchOblique);
+
     document.getElementById("oblFreeContainer").addEventListener("input", function()
     {
-        mView = obliqueMatrix();
-    });
-    document.getElementById("freeObl").addEventListener("click", function()
-    {
-        document.getElementById("oblFreeContainer").style.display = "block";
         mView = obliqueMatrix();
     });
 }

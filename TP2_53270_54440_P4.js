@@ -1,4 +1,4 @@
-var gl; var programDefault, programSuperQuad, canvas;
+var gl, programDefault, programSuperQuad, canvas;
 var currentInstance;
 var zoom = 1;
 var mView, mViewLocation; var mProjection, mProjectionLocation; var mModel, mModelLocation;
@@ -185,9 +185,29 @@ function switchAxonometric()
         case "Dimetric": mView = DIMETRIC_AXONO; break;
         case "Trimetric": mView = TRIMETRIC_AXONO; break;
         case "Free": 
-        mView = axonometricMatrix(); 
-        document.getElementById("axoFreeContainer").style.display = "block";
-        break;
+            mView = axonometricMatrix(); 
+            document.getElementById("axoFreeContainer").style.display = "block";
+            break;
+    }
+}
+
+/**
+ * Switches the current projection to the 
+ * selected oblique projection. Implements 
+ * the memory interface.
+ */
+function switchOblique()
+{
+    document.getElementById("oblFreeContainer").style.display = "none";
+    var selectedValue = document.querySelector('input[name="oblProjection"]:checked').value;
+    switch(selectedValue)
+    {
+        case "Cavalier": mView = CAVALIER_OBL; break;
+        case "Cabinet": mView = CABINET_OBL; break;
+        case "Free":
+            mView = obliqueMatrix();
+            document.getElementById("oblFreeContainer").style.display = "block";
+            break;
     }
 }
 
@@ -264,6 +284,7 @@ function create(type)
     }
         
     document.getElementById(type).checked = true;
+    zoom = 1;
     updateCanvas();
 }
 
