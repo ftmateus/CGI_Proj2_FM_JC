@@ -224,7 +224,7 @@ function reset()
  */
 function keyPress(ev)
 {
-    switch (ev.key)
+    switch (ev.key.toLowerCase())
     {
         case WIRED_FRAME_KEY: isFilled = false; break;
         case FILLED_KEY: isFilled = true; break;
