@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="EN-us">
 <head>
 <title>TP2_53270_54440_P4</title>
 <style>
@@ -140,37 +140,36 @@ void main(){
         <button id="object"      type="button" class = "buttonStyle">Object</button>
     </div>
     <div id="objectTab" class = "tabStyle" >
-        <form>
-            <input type="radio" name = "shape" id="cube" value="Create Cube"> Create Cube<br>
-            <input type="radio" name = "shape" id="sphere" value="Create Sphere"> Create Sphere<br>
-            <input type="radio" name = "shape" id="cylinder" value="Create Cylinder"> Create Cylinder<br>
-            <input type="radio" name = "shape" id="torus" value="Create Torus"> Create Torus<br>
-            <input type="radio" name = "shape" id="bunny" value="Create Bunny"> Create Bunny<br>
-            <input type="radio" name = "shape" id="superquadric" value="Create Bunny"> Create Superquadric<br>
+        <form id = "objectForm">
+            <input type="radio" name = "shape" id="cube" value="cube"> Create Cube<br>
+            <input type="radio" name = "shape" id="sphere" value="sphere"> Create Sphere<br>
+            <input type="radio" name = "shape" id="cylinder" value="cylinder"> Create Cylinder<br>
+            <input type="radio" name = "shape" id="torus" value="torus"> Create Torus<br>
+            <input type="radio" name = "shape" id="bunny" value="bunny"> Create Bunny<br>
+            <input type="radio" name = "shape" id="superquadric" value="superquadric"> Create Superquadric<br>
         </form>
         <div id="superQuadricSlidersContainer" class = "slidersStyle"> 
             e1:<input type="range" min="0.01" max="30" step="0.05" value="1" class="slider" id="e1Range">
             e2:<input type="range" min="0.01" max="30" step="0.05" value="1" class="slider" id="e2Range">
-        </div>
-       
+        </div>   
     </div>
     <div id="orthogonalTab" class = "tabStyle">
-        <form>
-            <input type="radio" id="mainElevation"  name = "ortProjection" class = "orthoStyle"> Main Elevation<br>
-            <input type="radio" id="rightElevation" name = "ortProjection" class = "orthoStyle"> Lateral Right Elevation<br>
-            <input type="radio" id="floorPlan"      name = "ortProjection" class = "orthoStyle"> Floor plan
+        <form id ="orthogonalForm">
+            <input type="radio" id="mainElevation"  name = "ortProjection" value = "mainElevation"> Main Elevation<br>
+            <input type="radio" id="rightElevation" name = "ortProjection" value = "lateralRightElevation"> Lateral Right Elevation<br>
+            <input type="radio" id="floorPlan"      name = "ortProjection" value = ""> Floor plan
         </form> 
     </div>
     
     <div id="axonometricTab" class = "tabStyle">
-        <form>
+        <form id = "axonometricForm">
             <input type="radio" name = "axoProjection" id="isometric" value="Isometric"> Isometric<br>
             <input type="radio" name = "axoProjection" id="dimetric" value="Dimetric"> Dimetric<br>
             <input type="radio" name = "axoProjection" id="trimetric" value="Trimetric"> Trimetric<br>
             <input type="radio" name = "axoProjection" id="freeAxo" value="Free"> Free<br>
                 <div id="axoFreeContainer" class = "slidersStyle">
-                    <input type = "range" class="slider" id="alphaAxo" min=0 max=45 value=1 step=0.5 oninput="alphaAxoOut.value = alphaAxo.value"> A = <output id="alphaAxoOut"></output><br>
-                    <input type = "range" class="slider" id="betaAxo" min=0 max=45 value=1 step=0.5 oninput="betaAxoOut.value = betaAxo.value"> B = <output id="betaAxoOut"></output> <br>
+                    <input type = "range" class="slider" id="alphaAxo" min=0 max=180 value=1 step=0.5 oninput="alphaAxoOut.value = alphaAxo.value"> A = <output id="alphaAxoOut"></output><br>
+                    <input type = "range" class="slider" id="betaAxo" min=0 max=180 value=1 step=0.5 oninput="betaAxoOut.value = betaAxo.value"> B = <output id="betaAxoOut"></output> <br>
                 </div>
         </form>
     </div>

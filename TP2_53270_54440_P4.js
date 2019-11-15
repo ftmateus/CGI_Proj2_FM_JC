@@ -7,7 +7,7 @@ const HEIGHT_RATIO = 0.6;
 var zoom = 1;
 var e1 = 1, e2 = 1;
 var d = 0;
-var lastAxonometricMat, lastOrthogonalMat, lastObliqueMat;
+var lastAxonometric = "dimetric", lastOrthogonal = "mainElevation", lastOblique = "cavalier";
 const MAIN_ELEVATION_ORTHO = mat4();//lookAt([1, 0, 0], [0, 0, 0], [0, 1, 0]);
 const PLANE_FLOOR_ORTHO = rotateX(90);
 const RIGHT_ELEVATION_ORTHO = rotateY(-90);
@@ -80,22 +80,25 @@ function zoomCanvas(e)
     updateCanvas();
 }
 
+function degrees(theta)
+{
+    return (theta * 180)/Math.PI;
+}
+
 
 function axonometricMatrix(a, b){
     if (_argumentsToArray( arguments ).length == 0)
     {
         a = document.getElementById("alphaAxo").value;
         b = document.getElementById("betaAxo").value;
+        return mult(rotateX(a),rotateY(b));
     }
     var A = radians(a);
     var B = radians(b);
     var gamma = Math.asin(Math.sqrt(Math.tan(A)*Math.tan(B)));
     var theta = Math.atan(Math.sqrt(Math.tan(A)/Math.tan(B)))-(Math.PI/2);
-    var r1 = Math.cos(gamma);
-    var r2 = Math.cos(theta)/Math.cos(B);
-    var r3 = (-Math.sin(theta))/Math.cos(A);
     //console.log(r3, r1,  a, b);
-    return mult(mult(rotateX(gamma/(Math.PI/180)),rotateY(theta/(Math.PI/180))), scalem(r2,r1,r3));
+    return mult(rotateX(degrees(gamma)),rotateY(degrees(theta)));
 }
 
 function obliqueMatrix(gamma, theta)
@@ -119,13 +122,47 @@ function updateCanvas()
     var aspectRatio = canvas.width/canvas.height;
     gl.viewport(0,0, canvas.width, canvas.height);
     
-    mProjection = mult(ortho(-1*aspectRatio, 1*aspectRatio, -1, 1, 10, -10), scalem(zoom, zoom, 1));
+    mProjection = mult(ortho(-2*aspectRatio, 2*aspectRatio, -2, 2, 10, -10), scalem(zoom, zoom, 1));
 }   
 
 function renderOverlay()
 {
     document.getElementById("zbuffer").textContent = zBuffer;
     document.getElementById("backfaceculling").textContent = cullFace;
+}
+
+function switchObject()
+{
+    var selectedValue = document.querySelector('input[name="shape"]:checked').value;
+    create(selectedValue);
+}
+
+
+function switchOrthogonal()
+{
+    var selectedValue = document.querySelector('input[name="ortProjection"]:checked').value;
+    switch(selectedValue)
+    {
+        case "mainElevation": mView = MAIN_ELEVATION_ORTHO; break;
+        case "lateralRightElevation": mView = RIGHT_ELEVATION_ORTHO; break;
+        case "floorPlan": mView = PLANE_FLOOR_ORTHO; break;
+    }
+}
+
+function switchAxonometric()
+{
+    document.getElementById("axoFreeContainer").style.display = "none";
+    var selectedValue = document.querySelector('input[name="axoProjection"]:checked').value;
+    switch(selectedValue)
+    {
+        case "Isometric": mView = ISOMETRIC_AXONO; break;
+        case "Dimetric": mView = DIMETRIC_AXONO; break;
+        case "Trimetric": mView = TRIMETRIC_AXONO; break;
+        case "Free": 
+        mView = axonometricMatrix(); 
+        document.getElementById("axoFreeContainer").style.display = "block";
+        break;
+    }
 }
 
 function reset()
