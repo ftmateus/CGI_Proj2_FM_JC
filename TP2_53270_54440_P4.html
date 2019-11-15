@@ -131,6 +131,7 @@ void main(){
         Z-buffer: <span id="zbuffer"></span>
         Back Face Culling: <span id="backfaceculling"></span>
     </div>
+
     <div id="buttonsContainer" class = "buttonsContainerStyle">
         <button id="orthogonal"  type="button" class = "buttonStyle">Orthogonal</button>
         <button id="axonometric" type="button" class = "buttonStyle">Axonometric</button>
@@ -139,6 +140,7 @@ void main(){
         <button id="reset"       type="reset"  class = "buttonStyle">Reset</button>
         <button id="object"      type="button" class = "buttonStyle">Object</button>
     </div>
+
     <div id="objectTab" class = "tabStyle" >
         <form id = "objectForm">
             <input type="radio" name = "shape" id="cube" value="cube"> Create Cube<br>
@@ -153,11 +155,12 @@ void main(){
             e2:<input type="range" min="0.01" max="30" step="0.05" value="1" class="slider" id="e2Range">
         </div>   
     </div>
+
     <div id="orthogonalTab" class = "tabStyle">
         <form id ="orthogonalForm">
             <input type="radio" id="mainElevation"  name = "ortProjection" value = "mainElevation"> Main Elevation<br>
             <input type="radio" id="rightElevation" name = "ortProjection" value = "lateralRightElevation"> Lateral Right Elevation<br>
-            <input type="radio" id="floorPlan"      name = "ortProjection" value = ""> Floor plan
+            <input type="radio" id="floorPlan"      name = "ortProjection" value = "floorPlan"> Floor plan
         </form> 
     </div>
     
@@ -168,19 +171,19 @@ void main(){
             <input type="radio" name = "axoProjection" id="trimetric" value="Trimetric"> Trimetric<br>
             <input type="radio" name = "axoProjection" id="freeAxo" value="Free"> Free<br>
                 <div id="axoFreeContainer" class = "slidersStyle">
-                    <input type = "range" class="slider" id="alphaAxo" min=0 max=180 value=1 step=0.5 oninput="alphaAxoOut.value = alphaAxo.value"> A = <output id="alphaAxoOut"></output><br>
-                    <input type = "range" class="slider" id="betaAxo" min=0 max=180 value=1 step=0.5 oninput="betaAxoOut.value = betaAxo.value"> B = <output id="betaAxoOut"></output> <br>
+                    A: <input type = "range" class="slider" id="alphaAxo" min=0 max=180 value=1 step=0.5 oninput="alphaAxoOut.value = alphaAxo.value"> <output id="alphaAxoOut"></output><br>
+                    B: <input type = "range" class="slider" id="betaAxo" min=0 max=180 value=1 step=0.5 oninput="betaAxoOut.value = betaAxo.value"> <output id="betaAxoOut"></output> <br>
                 </div>
         </form>
     </div>
     <div id="obliqueTab" class = "tabStyle">
-        <form>
+        <form id ="obliqueForm">
             <input type="radio" name = "oblProjection" id="cavalier" value="Cavalier"> Cavalier<br>
             <input type="radio" name = "oblProjection" id="cabinet"  value="Cabinet"> Cabinet<br>
             <input type="radio" name = "oblProjection" id="freeObl"   value="Free"> Free<br>
                 <div id="oblFreeContainer" class = "slidersStyle"> 
-                    <input type = "range" class="slider" id="gammaObl" min=0 max=5 value=1 step = 0.05 oninput="gammaOblOut.value = gammaObl.value"> Gamma = <output id="gammaOblOut">1</output> <br>
-                    <input type = "range" class="slider" id="thetaObl" min=0 max=360 value=0 step = 0.05  oninput="thetaOblOut.value = thetaObl.value"> Theta = <output id="thetaOblOut"></output> <br>
+                    Gamma: <input type = "range" class="slider" id="gammaObl" min=0 max=5 value=1 step = 0.05 oninput="gammaOblOut.value = gammaObl.value"> <output id="gammaOblOut">1</output> <br>
+                    Theta: <input type = "range" class="slider" id="thetaObl" min=0 max=360 value=0 step = 0.05  oninput="thetaOblOut.value = thetaObl.value"> <output id="thetaOblOut"></output> <br>
                 </div>
                 
         </form>
