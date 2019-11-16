@@ -36,8 +36,7 @@ window.onload = function init() {
 
     initObjects();
     reset();
-    create('cube');
-
+    
     addEventListeners();
     render();
 }
@@ -104,27 +103,37 @@ function axonometricMatrix(a, b){
     var gamma = Math.asin(Math.sqrt(Math.tan(A)*Math.tan(B)));
     var theta = Math.atan(Math.sqrt(Math.tan(A)/Math.tan(B)))-(Math.PI/2);
     //console.log(r3, r1,  a, b);
+    console.log(a, b, mult(rotateX(degrees(gamma)),rotateY(degrees(theta))));
     return mult(rotateX(degrees(gamma)),rotateY(degrees(theta)));
+    
 }
 
 /**
  * Creates an oblique view matrix with gamma and theta values.
  * If no values are specified, creates a matrix with values from
  * the free oblique projection sliders.
- * @param {} gamma 
- * @param {} theta 
+ * @param {} l 
+ * @param {} alpha 
  */
-function obliqueMatrix(gamma, theta)
+function obliqueMatrix(l, alpha)
 {
     if (_argumentsToArray( arguments ).length == 0) 
     {
-        gamma = document.getElementById("gammaObl").value;
-        theta = document.getElementById("thetaObl").value;
+        l = document.getElementById("lObl").value;
+        alpha = document.getElementById("alphaObl").value;
     }
     m = mat4();
     m[2][2]= 0;
-    m[0][2] = -gamma*Math.cos(radians(theta));
-    m[1][2] = -gamma*Math.sin(radians(theta));
+    m[0][2] = -l*Math.cos(radians(alpha));
+    m[1][2] = -l*Math.sin(radians(alpha));
+    return m;
+}
+
+function perspectiveMatrix(d)
+{
+    m = mat4();
+    m[2][2] = 0;
+    m[3][2] = -(1/d);
     return m;
 }
 
@@ -215,13 +224,13 @@ function reset()
 {
     mView = DIMETRIC_AXONO;
         
-    document.getElementById("gammaObl").value = 0;
-    document.getElementById("thetaObl").value = 0;
+    document.getElementById("lObl").value = 0;
+    document.getElementById("alphaObl").value = 0;
     document.getElementById("alphaAxo").value = 1;
     document.getElementById("betaAxo").value = 1;
 
-    document.getElementById("gammaOblOut").value = 0;
-    document.getElementById("thetaOblOut").value = 0;
+    document.getElementById("lOblOut").value = 0;
+    document.getElementById("alphaOblOut").value = 0;
     document.getElementById("alphaAxoOut").value = 1;
     document.getElementById("betaAxoOut").value = 1;
 
@@ -263,6 +272,7 @@ function keyPress(ev)
         break;
     }
 }
+
 
 /**
  * Creates a shape.

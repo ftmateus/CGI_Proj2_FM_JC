@@ -67,13 +67,12 @@ function perspectiveEventListeners()
     document.getElementById("perspective").addEventListener("click", function() 
     {
         openTab("perspective");
+        d = document.getElementById("dvalue").value;
+        mView = perspectiveMatrix(d);
     });
 
     document.getElementById("dvalue").addEventListener("input", function(){
         d = document.getElementById("dvalue").value;
-        mView = mat4();
-        mView[3][3] = 0;
-        mView[3][2] = -(1/d);
-        
+        mView = perspectiveMatrix(d);
     });
 }

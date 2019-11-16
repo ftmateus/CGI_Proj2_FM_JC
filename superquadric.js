@@ -20,10 +20,6 @@ function superquadricInit(gl, nlat, nlon) {
     superquadricUploadData(gl);
 }
 
-function expOperator(x, y)
-{
-    return Math.sign(x)*Math.pow(Math.abs(x), y);
-}
 // Generate points using polar coordinates
 function superquadricBuild(nlat, nlon) 
 {

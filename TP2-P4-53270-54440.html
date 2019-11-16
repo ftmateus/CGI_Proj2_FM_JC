@@ -33,12 +33,13 @@
     {
         margin-top: 2%;
         margin-left: 2%;
-        font-size: larger;
     }
 
     .slidersStyle
     {
         display: none;
+        display: table;
+        justify-content: center;
     }
 
     #overlay {
@@ -118,7 +119,7 @@ void main(){
 <script type="text/javascript" src="../Common/bunny.js"></script>
 <script type="text/javascript" src="../Common/bunny-data.js"></script>
 <script type="text/javascript" src="superquadric.js"></script>
-<script type="text/javascript" src="TP2_53270_54440_P4.js"></script>
+<script type="text/javascript" src="TP2-P4-53270-54440.js"></script>
 <script type="text/javascript" src="eventListeners.js"></script>
 </head>
 
@@ -172,8 +173,8 @@ void main(){
             <input type="radio" name = "axoProjection" id="freeAxo" value="Free"> Free<br>
         </form>
         <div id="axoFreeContainer" class = "slidersStyle">
-            A: <input type = "range" class="slider" id="alphaAxo" min=0 max=180 value=1 step=0.5 oninput="alphaAxoOut.value = alphaAxo.value"> <output id="alphaAxoOut"></output><br>
-            B: <input type = "range" class="slider" id="betaAxo" min=0 max=180 value=1 step=0.5 oninput="betaAxoOut.value = betaAxo.value"> <output id="betaAxoOut"></output> <br>
+            A: <input type = "range" class="slider" id="alphaAxo" min=0 max=360 value=1 step=0.5 oninput="alphaAxoOut.value = alphaAxo.value"> <output id="alphaAxoOut"></output><br>
+            B: <input type = "range" class="slider" id="betaAxo" min=0 max=360 value=1 step=0.5 oninput="betaAxoOut.value = betaAxo.value"> <output id="betaAxoOut"></output> <br>
         </div>
     </div>
 
@@ -184,16 +185,15 @@ void main(){
             <input type="radio" name = "oblProjection" id="freeObl"   value="Free"> Free<br>
         </form>
         <div id="oblFreeContainer" class = "slidersStyle"> 
-            Gamma: <input type = "range" class="slider" id="gammaObl" min=0 max=5 value=1 step = 0.05 oninput="gammaOblOut.value = gammaObl.value"> <output id="gammaOblOut">1</output> <br>
-            Theta: <input type = "range" class="slider" id="thetaObl" min=0 max=360 value=0 step = 0.05  oninput="thetaOblOut.value = thetaObl.value"> <output id="thetaOblOut"></output> <br>
+            l:<input type = "range" class="slider" id="lObl" min=0 max=5 value=1 step = 0.05 oninput="lOblOut.value = lObl.value"> <output id="lOblOut">1</output> <br>
+            α: <input type = "range" class="slider" id="alphaObl" min=0 max=360 value=0 step = 0.05  oninput="alphaOblOut.value = alphaObl.value"> <output id="alphaOblOut"></output> <br>
         </div>
     </div>
     
     <div id="perspectiveTab" class = "tabStyle"> 
         <form>
             Projection center (0,0,
-            <input type = "range" name = "dvalue" id="dvalue" value=0 min=0.5 max=5 step = 0.005 oninput="dvalueOut.value = dvalue.value"> ) d = <output id="dvalueOut">1</output> <br>
-               
+            <input type = "range" name = "dvalue" id="dvalue" value=0 min=2 max=5 step = 0.005 oninput="dvalueOut.value = dvalue.value"> ) d = <output id="dvalueOut">1</output> <br>             
         </form>
     </div>  
 </body>
