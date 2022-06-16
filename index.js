@@ -31,8 +31,8 @@ window.onload = function init() {
     gl.clearColor(0.5, 0.5, 0.5, 1.0);
     
     // Load shaders and initialize attribute buffers
-    programDefault = initShaders(gl, "vertex-shader-default", "fragment-shader");
-    programSuperQuad = initShaders(gl, "vertex-shader-superquad", "fragment-shader");
+    programDefault = initShaders(gl, "shaders/vertex-shader-default.glsl", "shaders/fragment-shader.glsl");
+    programSuperQuad = initShaders(gl, "shaders/superquad_v_shader.glsl", "shaders/fragment-shader.glsl");
 
     initObjects();
     reset();
